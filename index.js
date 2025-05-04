@@ -2,146 +2,130 @@ const { Client } = require('discord.js-selfbot-v13');
 const { joinVoiceChannel } = require('@discordjs/voice');
 const express = require("express");
 const app = express();
+
 const client = new Client();
 
-const CHANNEL_ID = process.env.channel;
+const PORT = process.env.PORT || 2000;
+const CHANNEL_ID = "923660518789623839"; // ID الشات
+const VOICE_CHANNEL_ID = process.env.channel;
 const GUILD_ID = process.env.guild;
-const MONITOR_CHANNEL_ID = "923660518789623839";
-const PRAYERS = [
-  "اللهم اجعل هذا اليوم بركة.",
-  "اللهم ارزقنا رضاك والجنة.",
-  "اللهم اغفر لنا ذنوبنا.",
-  "اللهم اشرح صدورنا ويسر أمورنا.",
-  "اللهم ارزقنا الصبر والثبات.",
-  "اللهم اجعلنا من عبادك الصالحين.",
-  "اللهم اجعلنا من أهل القرآن.",
-  "اللهم نسألك العفو والعافية.",
-  "اللهم اجعلنا من التوابين.",
-  "اللهم أعنا على ذكرك وشكرك.",
-  "اللهم توفنا وأنت راضٍ عنا.",
-  "اللهم احفظ أحبّتنا من كل سوء.",
-  "اللهم ارزقنا حسن الخاتمة.",
-  "اللهم زدنا إيمانًا ويقينًا.",
-  "اللهم باعد بيننا وبين خطايانا.",
-  "اللهم أنر قبور موتانا.",
-  "اللهم اجعل القرآن ربيع قلوبنا.",
-  "اللهم انصر الإسلام والمسلمين.",
-  "اللهم اجعلنا من الذاكرين الشاكرين.",
-  "اللهم لا تحرمنا خيرك بجهلنا.",
-  "اللهم اجعلنا هداة مهتدين.",
-  "اللهم اجعل يومنا هذا مباركًا.",
-  "اللهم اجعلنا ممن طال عمره وحسن عمله.",
-  "اللهم لا تجعلنا من الغافلين.",
-  "اللهم أدم علينا نعمك.",
-  "اللهم اجعلنا من الذين إذا أحسنوا استبشروا.",
-  "اللهم وفقنا لما تحب وترضى.",
-  "اللهم أعذنا من شرور أنفسنا.",
-  "اللهم اجعلنا من الصادقين.",
-  "اللهم حبب إلينا الإيمان.",
-  "اللهم اجعلنا من المتقين.",
-  "اللهم اجعلنا من المطمئنين بذكرك.",
-  "اللهم ثبتنا عند السؤال.",
-  "اللهم اجعلنا ممن يظلهم عرشك.",
-  "اللهم إنا نسألك الجنة.",
-  "اللهم قنا عذاب النار.",
-  "اللهم تقبل دعاءنا.",
-  "اللهم اجعل أعمالنا خالصة لوجهك.",
-  "اللهم إنا نسألك رضاك والجنة.",
-  "اللهم اجعلنا من المحسنين.",
-  "اللهم اجعلنا من المتوكلين عليك.",
-  "اللهم اجعلنا من المتواضعين.",
-  "اللهم لا تكلنا إلى أنفسنا طرفة عين.",
-  "اللهم ارزقنا علماً نافعاً.",
-  "اللهم اجعلنا من الذاكرين لك كثيراً.",
-  "اللهم احفظنا بحفظك.",
-  "اللهم اجعلنا من عبادك الصالحين.",
-  "اللهم اجعل يومنا خيراً من أمسنا.",
-  "اللهم اجعلنا من السابقين بالخيرات.",
-  "اللهم اجعلنا من الشاكرين لنعمك."
+
+const duas = [
+  "اللهم اجعلني من التوابين.",
+  "اللهم لا تكلني إلى نفسي طرفة عين.",
+  "اللهم تول أمري كله.",
+  "اللهم اجعلني مقيم الصلاة.",
+  "اللهم قني عذابك يوم تبعث عبادك.",
+  "اللهم اغفر لي ولوالدي.",
+  "اللهم إني أسألك العفو والعافية.",
+  "رب اغفر وارحم وأنت خير الراحمين.",
+  "اللهم إنك عفو تحب العفو فاعفُ عني.",
+  "اللهم اهدني وسددني.",
+  "رب زدني علماً.",
+  "اللهم إني أسألك الجنة.",
+  "اللهم أعني على ذكرك وشكرك وحسن عبادتك.",
+  "اللهم يسر لي أمري.",
+  "اللهم فرج همي.",
+  "اللهم اجعلني من عبادك الصالحين.",
+  "اللهم ارزقني الإخلاص.",
+  "اللهم حبب إلي الإيمان.",
+  "اللهم اجعلني هادياً مهدياً.",
+  "اللهم ثبت قلبي على دينك.",
+  "اللهم استعملني في طاعتك.",
+  "اللهم اغنني بحلالك عن حرامك.",
+  "اللهم اجعلني من المتوكلين عليك.",
+  "اللهم اجعلني من الشاكرين.",
+  "اللهم تقبل مني صالح الأعمال.",
+  "اللهم اجعل القرآن ربيع قلبي.",
+  "اللهم افتح لي أبواب رحمتك.",
+  "اللهم اجعلني من الصابرين.",
+  "اللهم إني أعوذ بك من الهم والحزن.",
+  "اللهم لا تجعل مصيبتي في ديني.",
+  "اللهم اجعلني من عبادك المخلصين.",
+  "اللهم اجعل عملي خالصاً لوجهك.",
+  "اللهم باعد بيني وبين خطاياي.",
+  "اللهم إني أعوذ بك من قلب لا يخشع.",
+  "اللهم ارزقني توبة نصوحاً.",
+  "اللهم نور قبري.",
+  "اللهم ثبتني عند السؤال.",
+  "اللهم إني أسألك حسن الخاتمة.",
+  "اللهم اجعلني من المحسنين.",
+  "اللهم اجعلني من المتقين.",
+  "اللهم اجعلني من الذاكرين.",
+  "اللهم اجعلني من الراضين.",
+  "اللهم اجعلني من الموقنين.",
+  "اللهم اجعلني من المتواضعين.",
+  "اللهم إني أعوذ بك من الكسل.",
+  "اللهم إني أعوذ بك من الجبن.",
+  "اللهم قني شر نفسي.",
+  "اللهم ارزقني لذة النظر إلى وجهك.",
+  "اللهم لا تحرمني لذة مناجاتك.",
+  "اللهم اجعلني من الذين إذا أحسنوا استبشروا."
 ];
 
-let startTime = Date.now();
-
-// تشغيل موقع بسيط لعرض معلومات البوت
-app.get('/', async (req, res) => {
-  const uptime = formatDuration(Date.now() - startTime);
+// واجهة الموقع
+app.get('/', (req, res) => {
   res.send(`
-    <body style="background-color: #111; color: white; font-family: Arial; text-align: center;">
-      <h1>Bot 24H ON!</h1>
-      <img src="${client.user.displayAvatarURL()}" style="width: 128px; border-radius: 50%; margin-top: 20px;" />
-      <h2>${client.user.username}</h2>
-      <p>@${client.user.tag}</p>
-      <button onclick="navigator.clipboard.writeText('${client.user.id}')" style="padding: 10px 20px; margin: 10px;">Copy ID</button>
-      <p>Uptime: ${uptime}</p>
-    </body>
+  <body style="background:black;color:white;text-align:center;font-family:sans-serif;">
+    <h1>Bot 24H ON!</h1>
+    <img src="${client.user?.displayAvatarURL() || ''}" style="border-radius:50%;width:150px;"><br>
+    <h2>${client.user?.username || ''}</h2>
+    <p>@${client.user?.tag || ''}</p>
+    <p>ID: <span id="uid">${client.user?.id || ''}</span> <button onclick="copy()">Copy</button></p>
+    <p>البوت يعمل منذ: <span id="uptime"></span></p>
+    <script>
+      function copy() {
+        navigator.clipboard.writeText(document.getElementById("uid").innerText);
+        alert("تم نسخ ID");
+      }
+      setInterval(() => {
+        const seconds = Math.floor(performance.now() / 1000);
+        document.getElementById("uptime").innerText = seconds + " ثانية";
+      }, 1000);
+    </script>
+  </body>
   `);
 });
-var listener = app.listen(process.env.PORT || 2000, () => {
-  console.log('Web server running on port ' + listener.address().port);
-});
+app.listen(PORT, () => console.log("I'm Ready To Work..! 24H"));
 
-// عند تشغيل البوت
 client.on('ready', () => {
   console.log(`${client.user.username} is ready!`);
 
-  // الدخول المستمر للروم الصوتي
+  // دخول روم الصوت بدون إعادة تشغيل
   setInterval(() => {
-    client.channels.fetch(CHANNEL_ID)
-      .then(channel => {
-        joinVoiceChannel({
-          channelId: channel.id,
-          guildId: GUILD_ID,
-          selfMute: true,
-          selfDeaf: true,
-          adapterCreator: channel.guild.voiceAdapterCreator,
-        });
-      })
-      .catch(() => {});
-  }, 10000); // كل 10 ثواني للتأكد من الاتصال
+    client.channels.fetch(VOICE_CHANNEL_ID).then(channel => {
+      joinVoiceChannel({
+        channelId: channel.id,
+        guildId: GUILD_ID,
+        adapterCreator: channel.guild.voiceAdapterCreator,
+        selfDeaf: true,
+        selfMute: true
+      });
+    }).catch(() => {});
+  }, 10000); // كل 10 ثواني يتأكد
 
-  // إرسال دعاء كل 10 دقائق
+  // إرسال دعاء عشوائي كل 10 دقائق
   setInterval(() => {
-    const prayer = PRAYERS[Math.floor(Math.random() * PRAYERS.length)];
-    const channel = client.channels.cache.get(MONITOR_CHANNEL_ID);
-    if (channel) channel.send(prayer);
+    const channel = client.channels.cache.get(CHANNEL_ID);
+    if (channel && channel.isText()) {
+      const randomDua = duas[Math.floor(Math.random() * duas.length)];
+      channel.send(`**${randomDua}**`);
+    }
   }, 10 * 60 * 1000);
 });
 
-// الردود التلقائية
-client.on('messageCreate', async (message) => {
-  if (message.channel.id !== MONITOR_CHANNEL_ID) return;
-  if (message.author.id === client.user.id) return;
+// الردود
+client.on('messageCreate', message => {
+  if (message.channel.id !== CHANNEL_ID || message.author.bot) return;
 
   const content = message.content.toLowerCase();
-
-  // رد السلام
-  const salamWords = [
-    "سلام", "السلام", "السلام عليكم", "سلام عليكم", 
-    "السلام عليكم ورحمة الله", "سلام عليكم ورحمة الله"
-  ];
-  if (salamWords.some(word => content.includes(word))) {
-    return message.reply("وعليكم السلام ورحمة الله وبركاته <a:SXB_RedLove:1020384635496169482>");
-  }
-
-  // رد البرب
-  if (content.includes("برب")) {
-    return message.reply("تيت موفق/ه, لا تطول/ي <a:SXB_BabyLove:953950566374076428>");
-  }
-
-  // رد الباك
-  if (content.includes("باك")) {
-    return message.reply("ولكم باك <:SXB_isaedxRose:1249110291367854161>");
+  if (["سلام", "السلام", "سلام عليكم", "السلام عليكم", "السلام عليكم ورحمة الله", "سلام عليكم ورحمة الله"].some(txt => content.includes(txt))) {
+    message.reply("عليكم السلام ورحمة الله وبركاته <a:SXB_RedLove:1020384635496169482>");
+  } else if (content.includes("برب")) {
+    message.reply("تيت موفق/ه, لا تطول/ي <a:SXB_BabyLove:953950566374076428>");
+  } else if (content.includes("باك")) {
+    message.reply("ولكم باك <:SXB_isaedxRose:1249110291367854161>");
   }
 });
 
-// تسجيل دخول البوت
 client.login(process.env.token);
-
-// دالة لحساب مدة التشغيل
-function formatDuration(ms) {
-  const seconds = Math.floor(ms / 1000) % 60;
-  const minutes = Math.floor(ms / (1000 * 60)) % 60;
-  const hours = Math.floor(ms / (1000 * 60 * 60)) % 24;
-  const days = Math.floor(ms / (1000 * 60 * 60 * 24));
-  return `${days}d ${hours}h ${minutes}m ${seconds}s`;
-}
