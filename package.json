@@ -1,18 +1,27 @@
 {
-  "name": "24-voice-panel",
+  "name": "discord-24h-selfbot",
   "version": "1.0.0",
-  "description": "Selfbot with 24h VC + Web Panel",
+  "description": "Selfbot Discord 24/7 in voice with auto-replies and prayers",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
-    "discord.js-selfbot-v13": "^3.1.4",
-    "@discordjs/voice": "^0.17.0",
-    "express": "^4.18.3",
-    "dotenv": "^16.3.1"
+    "discord.js-selfbot-v13": "^1.9.0",
+    "@discordjs/voice": "^0.14.0",
+    "express": "^4.18.2"
   },
   "engines": {
-    "node": ">=20.x"
-  }
+    "node": ">=16.9.0"
+  },
+  "keywords": [
+    "discord",
+    "selfbot",
+    "24h",
+    "voice",
+    "express",
+    "bot"
+  ],
+  "author": "Waleed",
+  "license": "MIT"
 }
