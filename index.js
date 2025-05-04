@@ -1,107 +1,163 @@
-const { Client } = require('discord.js-selfbot-v13');
-const { joinVoiceChannel } = require('@discordjs/voice');
+require("dotenv").config();
+const { Client } = require("discord.js-selfbot-v13");
+const { joinVoiceChannel, getVoiceConnection } = require("@discordjs/voice");
 const express = require("express");
 const app = express();
-
 const client = new Client();
+const PORT = process.env.PORT || 3000;
 
-const listener = app.listen(process.env.PORT || 2000, () => {
-  console.log('Your app is listening on port ' + listener.address().port);
-});
+let currentChannelId = null;
 
-// صفحة الواجهة
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+// صفحة HTML ديناميكية
 app.get("/", async (req, res) => {
-  if (!client.user) return res.send("البوت ليس جاهزًا بعد.");
+  if (!client.user) return res.send("Bot not ready");
+
+  const uptime = formatUptime(process.uptime());
+  const user = client.user;
+  const vc = currentChannelId
+    ? client.channels.cache.get(currentChannelId)?.name || "?"
+    : "Not connected";
+
   res.send(`
-  <html>
+    <html>
     <head>
       <title>Bot 24H ON</title>
       <style>
         body {
-          background: black;
-          color: white;
+          background: #111;
+          color: #eee;
           font-family: sans-serif;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          height: 100vh;
           text-align: center;
+          padding: 20px;
         }
         img {
           border-radius: 50%;
-          width: 150px;
-          height: 150px;
+          width: 120px;
         }
-        .info {
-          margin-top: 10px;
-          font-size: 18px;
+        input {
+          padding: 10px;
+          margin: 10px;
+          width: 300px;
         }
         button {
-          margin-top: 20px;
           padding: 10px 20px;
-          font-size: 16px;
-          background-color: #1e90ff;
+          margin: 10px;
+          background: #444;
           color: white;
           border: none;
-          border-radius: 5px;
           cursor: pointer;
         }
-        .status {
-          position: absolute;
-          top: 30px;
-          font-size: 22px;
-          color: #0f0;
+        .copy {
+          background: #333;
+          border-radius: 5px;
+          padding: 5px;
         }
       </style>
     </head>
     <body>
-      <div class="status">Bot 24H ON!</div>
-      <img src="${client.user.displayAvatarURL()}" />
-      <div class="info">${client.user.username}</div>
-      <div class="info">@${client.user.discriminator}</div>
-      <div class="info" id="userid">${client.user.id}</div>
-      <button onclick="copyID()">نسخ ID</button>
-      <button onclick="joinVC()">دخول الروم الآن</button>
+      <h2>Bot 24H ON</h2>
+      <div>
+        <img src="${user.displayAvatarURL()}" />
+        <h3>${user.username}</h3>
+        <p>#${user.discriminator}</p>
+        <div class="copy">
+          <span id="id">${user.id}</span>
+          <button onclick="copyId()">Copy ID</button>
+        </div>
+        <p>VC: ${vc}</p>
+        <p>Uptime: ${uptime}</p>
+      </div>
+      <hr />
+      <form method="POST" action="/join">
+        <input name="channelId" placeholder="Voice Channel ID" required />
+        <input name="guildId" placeholder="Guild ID" required />
+        <br />
+        <button type="submit">Join VC</button>
+      </form>
+      <form method="POST" action="/disconnect">
+        <input name="guildId" placeholder="Guild ID" required />
+        <button type="submit">Disconnect</button>
+      </form>
 
       <script>
-        function copyID() {
-          navigator.clipboard.writeText(document.getElementById("userid").innerText);
-          alert("تم نسخ ID");
-        }
-
-        function joinVC() {
-          fetch("/join", { method: "POST" })
-            .then(() => alert("تم إدخال البوت إلى الروم"))
-            .catch(() => alert("فشل في الدخول"));
+        function copyId() {
+          const id = document.getElementById("id").innerText;
+          navigator.clipboard.writeText(id);
+          alert("Copied!");
         }
       </script>
     </body>
-  </html>
+    </html>
   `);
 });
 
-// أمر إدخال الروم عبر زر
+// انضمام للروم
 app.post("/join", async (req, res) => {
+  const { channelId, guildId } = req.body;
   try {
-    const channel = await client.channels.fetch(process.env.channel);
+    const channel = await client.channels.fetch(channelId);
     joinVoiceChannel({
-      channelId: channel.id,
-      guildId: process.env.guild,
-      selfDeaf: true,
+      channelId,
+      guildId,
       selfMute: true,
-      adapterCreator: channel.guild.voiceAdapterCreator
+      selfDeaf: true,
+      adapterCreator: channel.guild.voiceAdapterCreator,
     });
-    res.sendStatus(200);
-  } catch (err) {
-    console.error("Join Voice Error:", err.message);
-    res.sendStatus(500);
+    currentChannelId = channelId;
+    res.redirect("/");
+  } catch {
+    res.send("Failed to join VC");
   }
 });
 
-// عند التشغيل
-client.on('ready', () => {
+// قطع الاتصال
+app.post("/disconnect", async (req, res) => {
+  try {
+    const connection = getVoiceConnection(req.body.guildId);
+    if (connection) {
+      connection.destroy();
+      currentChannelId = null;
+    }
+    res.redirect("/");
+  } catch {
+    res.send("Error disconnecting");
+  }
+});
+
+// إعادة اتصال تلقائي
+setInterval(async () => {
+  if (!currentChannelId) return;
+  const connection = getVoiceConnection(process.env.guild);
+  if (!connection) {
+    try {
+      const channel = await client.channels.fetch(currentChannelId);
+      joinVoiceChannel({
+        channelId: currentChannelId,
+        guildId: process.env.guild,
+        selfMute: true,
+        selfDeaf: true,
+        adapterCreator: channel.guild.voiceAdapterCreator,
+      });
+    } catch {}
+  }
+}, 60000);
+
+function formatUptime(seconds) {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = Math.floor(seconds % 60);
+  return `${h}h ${m}m ${s}s`;
+}
+
+client.on("ready", () => {
   console.log(`${client.user.username} is ready!`);
 });
+
+app.listen(PORT, () =>
+  console.log(`Web Panel Running at http://localhost:${PORT}`)
+);
 
 client.login(process.env.token);
