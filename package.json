@@ -1,27 +1,17 @@
 {
-  "name": "discord-24h-selfbot",
+  "name": "24h-voice-bot",
   "version": "1.0.0",
-  "description": "Selfbot Discord 24/7 in voice with auto-replies and prayers",
+  "description": "24/7 Voice Selfbot with Auto Reply and Prayer",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
-    "discord.js-selfbot-v13": "^3.1.4"
-    "@discordjs/voice": "^0.14.0",
-    "express": "^4.18.2"
+    "discord.js-selfbot-v13": "^3.1.4",
+    "@discordjs/voice": "^0.17.0",
+    "express": "^4.18.3"
   },
   "engines": {
-    "node": ">=16.9.0"
-  },
-  "keywords": [
-    "discord",
-    "selfbot",
-    "24h",
-    "voice",
-    "express",
-    "bot"
-  ],
-  "author": "Waleed",
-  "license": "MIT"
+    "node": "16.x"
+  }
 }
