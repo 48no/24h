@@ -1,10 +1,10 @@
-‏const { Client } = require("discord.js-selfbot-v13");
-‏const { joinVoiceChannel, getVoiceConnection } = require("@discordjs/voice");
-‏const express = require("express");
-‏const app = express();
-‏const client = new Client();
+const { Client } = require("discord.js-selfbot-v13");
+const { joinVoiceChannel, getVoiceConnection } = require("@discordjs/voice");
+const express = require("express");
+const app = express();
+const client = new Client();
 
-‏const prayers = [
+const prayers = [
   "**اللهم اجعل هذا اليوم بداية خير وسعادة، وارزقنا فيه توفيقك ورضاك، وابعد عنا شر ما قضيت.**",
   "**اللهم اجعلنا في هذا اليوم من الذين ناديتهم فلبّوك، وغفرت لهم ذنوبهم، ويسرت لهم أمرهم، وباركت في رزقهم.**",
   "**اللهم اجعل يومنا هذا شاهدًا لنا لا علينا، وافتح لنا أبواب الخير والتوفيق، واغفر لنا ما مضى.**",
@@ -55,144 +55,140 @@
   "**اللهم اجعلنا ممن يسيرون في الأرض برحمة، ويتكلمون بحكمة، ويعطون بسخاء، ويُحبون بصدق.**"
 ];
 
+let shuffledPrayers = prayers.sort(() => Math.random() - 0.5);
+let prayerIndex = 0;
 
-‏let shuffledPrayers = prayers.sort(() => Math.random() - 0.5);
-‏let prayerIndex = 0;
-
-‏const VOICE_ROOMS = [
-‏  { guildId: "1295847578700878026", channelId: "1295860054448148511" }  // فواز
+const VOICE_ROOMS = [
+  { guildId: "1295847578700878026", channelId: "1295860054448148511" }
 ];
-‏const TEXT_ROOM = "1295859825061793904"; // تحديث روم الدعاء
-‏const RESPONSE_ROOM = "1295859806468440135"; // تحديث روم الردود
+const TEXT_ROOM = "1295859825061793904";
+const RESPONSE_ROOM = "1295859806468440135";
 
-‏const greetings = [
+const greetings = [
   "سلام", "السلام", "سلام عليكم", "السلام عليكم", "سلام عليكم ورحمه",
   "السلام عليكم ورحمه", "سلام عليكم ورحمه الله", "السلام عليكم ورحمه الله",
   "سلام عليكم ورحمه الله وبركاته", "السلام عليكم ورحمه الله وبركاته"
 ];
-‏const greetingReplies = [
+const greetingReplies = [
   "وعليكم السلام ورحمة الله وبركاته منور/ه",
   "وعليكم السلام ورحمة الله وبركاته ولكم",
   "وعليكم السلام ورحمة الله وبركاته حياك الله"
 ];
-‏const backReplies = ["ولكم", "ولكم باك", "منور/ه"];
-‏const triggerWords = ["كوري", "كور", "كرو", "وليد", "كوره", "كورة"];
-‏const triggerReplies = ["عيوني", "سم", "ارحب", "لبيه", "امر"];
+const backReplies = ["ولكم", "ولكم باك", "منور/ه"];
+const triggerWords = ["كوري", "كور", "كرو", "وليد", "كوره", "كورة"];
+const triggerReplies = ["عيوني", "سم", "ارحب", "لبيه", "امر"];
 
-‏app.get("/", async (_, res) => {
-‏  if (!client.user) {
-‏    return res.send("البوت لم يسجل الدخول بعد. حاول لاحقًا.");
+app.get("/", async (_, res) => {
+  if (!client.user) {
+    return res.send("البوت لم يسجل الدخول بعد. حاول لاحقًا.");
   }
 
-‏  const user = client.user;
-‏  const avatar = user.displayAvatarURL();
-‏  const username = user.username;
-‏  const id = user.id;
+  const user = client.user;
+  const avatar = user.displayAvatarURL();
+  const username = user.username;
+  const id = user.id;
 
-‏  res.send(`
-‏    <body style="background:#111;color:white;text-align:center;font-family:sans-serif">
-‏      <h1 style="color:#0f0">البوت شغال 24 ساعة</h1>
-‏      <img src="${avatar}" width="128" style="border-radius:50%"><br><br>
-‏      <div><strong>يوزر:</strong> ${username}#${user.discriminator}</div>
-‏      <div><strong>ID:</strong> <span id="uid">${id}</span>
-‏        <button onclick="copyID()">نسخ</button>
-‏      </div><br>
-‏      <a href="/join2"><button>دخول روم فواز</button></a>
-‏      <script>
-‏        function copyID() {
-‏          const id = document.getElementById('uid').innerText;
-‏          navigator.clipboard.writeText(id);
-‏          alert("تم نسخ ID");
+  res.send(`
+    <body style="background:#111;color:white;text-align:center;font-family:sans-serif">
+      <h1 style="color:#0f0">البوت شغال 24 ساعة</h1>
+      <img src="${avatar}" width="128" style="border-radius:50%"><br><br>
+      <div><strong>يوزر:</strong> ${username}#${user.discriminator}</div>
+      <div><strong>ID:</strong> <span id="uid">${id}</span>
+        <button onclick="copyID()">نسخ</button>
+      </div><br>
+      <a href="/join2"><button>دخول روم فواز</button></a>
+      <script>
+        function copyID() {
+          const id = document.getElementById('uid').innerText;
+          navigator.clipboard.writeText(id);
+          alert("تم نسخ ID");
         }
-‏      </script>
-‏    </body>
+      </script>
+    </body>
   `);
 });
 
-‏app.get("/join2", (_, res) => {
-‏  joinVoice(VOICE_ROOMS[0]); // استخدم العنصر الموجود
-‏  res.send("تم دخول روم فواز");
+app.get("/join2", (_, res) => {
+  joinVoice(VOICE_ROOMS[0]);
+  res.send("تم دخول روم فواز");
 });
-‏app.listen(process.env.PORT || 2000, () => console.log("Ready 24H"));
 
-‏client.on("ready", () => {
-‏  console.log(`${client.user.username} is ready!`);
+app.listen(process.env.PORT || 2000, () => console.log("Ready 24H"));
 
-  // تكرار الانضمام إلى القناة الصوتية
-‏  setInterval(() => {
-‏    VOICE_ROOMS.forEach(room => {
-‏      const conn = getVoiceConnection(room.guildId);
-‏      if (!conn || conn.joinConfig.channelId !== room.channelId) {
-‏        joinVoice(room);
+client.on("ready", () => {
+  console.log(`${client.user.username} is ready!`);
+
+  setInterval(() => {
+    VOICE_ROOMS.forEach(room => {
+      const conn = getVoiceConnection(room.guildId);
+      if (!conn || conn.joinConfig.channelId !== room.channelId) {
+        joinVoice(room);
       }
     });
   }, 5000);
 
-  // إرسال الأدعية كل 5 دقائق
-‏  setInterval(() => {
-‏    const channel = client.channels.cache.get(TEXT_ROOM);
-‏    if (channel) {
-‏      channel.send(`**${shuffledPrayers[prayerIndex]}**`);
-‏      prayerIndex = (prayerIndex + 1) % shuffledPrayers.length;
-‏      if (prayerIndex === 0) shuffledPrayers = prayers.sort(() => Math.random() - 0.5);
+  setInterval(() => {
+    const channel = client.channels.cache.get(TEXT_ROOM);
+    if (channel) {
+      channel.send(`**${shuffledPrayers[prayerIndex]}**`);
+      prayerIndex = (prayerIndex + 1) % shuffledPrayers.length;
+      if (prayerIndex === 0) shuffledPrayers = prayers.sort(() => Math.random() - 0.5);
     }
-  }, 5 * 60 * 1000); // كل 5 دقايق
+  }, 5 * 60 * 1000);
 });
 
-‏client.on("messageCreate", (msg) => {
-‏  if (msg.channel.id !== RESPONSE_ROOM || msg.author.id === client.user.id) return;
-‏  const content = msg.content.toLowerCase();
+client.on("messageCreate", (msg) => {
+  if (msg.channel.id !== RESPONSE_ROOM || msg.author.id === client.user.id) return;
+  const content = msg.content.toLowerCase();
 
-  // رد على السلام
-‏  if (greetings.includes(content)) {
-‏    const reply = greetingReplies[Math.floor(Math.random() * greetingReplies.length)];
-‏    msg.reply(reply);
+  if (greetings.includes(content)) {
+    const reply = greetingReplies[Math.floor(Math.random() * greetingReplies.length)];
+    msg.reply(reply);
   }
 
-‏  if (content === "برب") msg.reply("تيت موفق/ه لاتتاخر/ي");
-‏  if (content === "باك") msg.reply(backReplies[Math.floor(Math.random() * backReplies.length)]);
+  if (content === "برب") msg.reply("تيت موفق/ه لاتتاخر/ي");
+  if (content === "باك") msg.reply(backReplies[Math.floor(Math.random() * backReplies.length)]);
 
-‏  if (content.includes("ارحب") && (msg.mentions.has(client.user) || msg.reference)) {
-‏    msg.reply("تبقى");
-  }
-
-‏  if (triggerWords.some(word => content.includes(word))) {
-‏    msg.reply(triggerReplies[Math.floor(Math.random() * triggerReplies.length)]);
+  if (content.includes("ارحب") && (msg.mentions.has(client.user) || msg.reference)) {
+    msg.reply("تبقى");
   }
 
-  // رد على الضحك أو الريبلاي
-‏  if (msg.reference || content.includes("هههه") || content.includes("😂") || content.includes("😹")) {
-‏    msg.reply("دوم الضحكة");
+  if (triggerWords.some(word => content.includes(word))) {
+    msg.reply(triggerReplies[Math.floor(Math.random() * triggerReplies.length)]);
   }
 
-  // رد على "احد موجود"
-‏  if (content.includes("احد موجود") || content.includes("موجودين")) {
-‏    msg.reply("موجودين موجودين");
+  if (msg.reference || content.includes("هههه") || content.includes("😂") || content.includes("😹")) {
+    msg.reply("دوم الضحكة");
   }
 
-  // الرد على بعض الاستفسارات المتعلقة بالبث
-‏  if (content.includes("في بث")) {
-‏    msg.reply("***- :a281108517547495657587~1: ماندري اذا حدد وقت للبثوث");
+  if (content.includes("احد موجود") || content.includes("موجودين")) {
+    msg.reply("موجودين موجودين");
   }
-‏  if (content.includes("قروب الواتس")) {
-‏    msg.reply("*** - قروب الواتس ذا هو [اضغط هنا](https://whatsapp.com/channel/0029VaW8D6B3AzNQvVsEbk0x)***");
+
+  if (content.includes("في بث")) {
+    msg.reply("***- :a281108517547495657587~1: ماندري اذا حدد وقت للبثوث");
   }
-‏  if (content.includes("كيف افتح تكت") || content.includes("مفتوح تقديم أداره")) {
-‏    msg.reply("*** تقدر تروح https://discord.com/channels/1295847578700878026/1296771411758682153 وتفتح تكت عليا الأفضل واسمه شكاوي ***");
+
+  if (content.includes("قروب الواتس")) {
+    msg.reply("*** - قروب الواتس ذا هو [اضغط هنا](https://whatsapp.com/channel/0029VaW8D6B3AzNQvVsEbk0x)***");
+  }
+
+  if (content.includes("كيف افتح تكت") || content.includes("مفتوح تقديم أداره")) {
+    msg.reply("*** تقدر تروح https://discord.com/channels/1295847578700878026/1296771411758682153 وتفتح تكت عليا الأفضل واسمه شكاوي ***");
   }
 });
 
-‏function joinVoice({ guildId, channelId }) {
-‏  const connection = getVoiceConnection(guildId);
-‏  if (connection && connection.joinConfig.channelId === channelId) return;
+function joinVoice({ guildId, channelId }) {
+  const connection = getVoiceConnection(guildId);
+  if (connection && connection.joinConfig.channelId === channelId) return;
 
-‏  joinVoiceChannel({
-‏    channelId,
-‏    guildId,
-‏    adapterCreator: client.guilds.cache.get(guildId).voiceAdapterCreator,
-‏    selfDeaf: false,
-‏    selfMute: true,
+  joinVoiceChannel({
+    channelId,
+    guildId,
+    adapterCreator: client.guilds.cache.get(guildId).voiceAdapterCreator,
+    selfDeaf: false,
+    selfMute: true,
   });
 }
 
-‏client.login(process.env.token);
+client.login(process.env.token);
