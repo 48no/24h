@@ -1,5 +1,5 @@
 const { Client } = require("discord.js-selfbot-v13");
-const { joinVoiceChannel, getVoiceConnection } = require("@discordjs/voice");
+const { joinVoiceChannel } = require("@discordjs/voice");
 const express = require("express");
 const app = express();
 const client = new Client();
@@ -54,25 +54,18 @@ const prayers = [
   "**اللهم اجعلنا نورًا لمن حولنا، ورحمةً لمن نلقاهم، وسببًا في فرج كل مهموم.**",
   "**اللهم اجعلنا ممن يسيرون في الأرض برحمة، ويتكلمون بحكمة، ويعطون بسخاء، ويُحبون بصدق.**"
 ];
-
 while (prayers.length < 100) {
   const base = prayers[Math.floor(Math.random() * 10)];
   prayers.push(base + " آمين.");
 }
-
 let shuffledPrayers = prayers.sort(() => Math.random() - 0.5);
 let prayerIndex = 0;
 
-const VOICE_ROOMS = [
-  { guildId: "1295847578700878026", channelId: "1295860054448148511" }
-];
+const VOICE_ROOM = { guildId: "1295847578700878026", channelId: "1295860054448148511" };
 const TEXT_ROOM = "1295859825061793904";
 
-app.get("/", async (_, res) => {
-  if (!client.user) {
-    return res.send("البوت لم يسجل الدخول بعد. حاول لاحقًا.");
-  }
-
+app.get("/", (_, res) => {
+  if (!client.user) return res.send("البوت لم يسجل الدخول بعد.");
   const user = client.user;
   const avatar = user.displayAvatarURL();
   const username = user.username;
@@ -86,7 +79,7 @@ app.get("/", async (_, res) => {
       <div><strong>ID:</strong> <span id="uid">${id}</span>
         <button onclick="copyID()">نسخ</button>
       </div><br>
-      <a href="/join2"><button>دخول روم فواز</button></a>
+      <a href="/join"><button style="padding:10px 20px;font-size:16px;">دخول الروم الصوتي</button></a>
       <script>
         function copyID() {
           const id = document.getElementById('uid').innerText;
@@ -98,25 +91,17 @@ app.get("/", async (_, res) => {
   `);
 });
 
-app.get("/join2", (_, res) => {
-  joinVoice(VOICE_ROOMS[0]);
-  res.send("تم دخول روم فواز");
+app.get("/join", (_, res) => {
+  joinVoice(VOICE_ROOM);
+  res.send("تم دخول الروم الصوتي.");
 });
 
-app.listen(process.env.PORT || 2000, () => console.log("Ready 24H"));
+app.listen(process.env.PORT || 2000, () => console.log("البوت يعمل"));
 
 client.on("ready", () => {
-  console.log(`${client.user.username} is ready!`);
+  console.log(`${client.user.username} جاهز`);
 
-  setInterval(() => {
-    VOICE_ROOMS.forEach(room => {
-      const conn = getVoiceConnection(room.guildId);
-      if (!conn || conn.joinConfig.channelId !== room.channelId) {
-        joinVoice(room);
-      }
-    });
-  }, 5000);
-
+  // دعاء كل نصف ساعة
   setInterval(() => {
     const channel = client.channels.cache.get(TEXT_ROOM);
     if (channel) {
@@ -124,17 +109,16 @@ client.on("ready", () => {
       prayerIndex = (prayerIndex + 1) % shuffledPrayers.length;
       if (prayerIndex === 0) shuffledPrayers = prayers.sort(() => Math.random() - 0.5);
     }
-  }, 5 * 60 * 1000);
+  }, 30 * 60 * 1000); // كل 30 دقيقة
 });
 
 function joinVoice({ guildId, channelId }) {
-  const connection = getVoiceConnection(guildId);
-  if (connection && connection.joinConfig.channelId === channelId) return;
-
+  const guild = client.guilds.cache.get(guildId);
+  if (!guild) return;
   joinVoiceChannel({
     channelId,
     guildId,
-    adapterCreator: client.guilds.cache.get(guildId).voiceAdapterCreator,
+    adapterCreator: guild.voiceAdapterCreator,
     selfDeaf: false,
     selfMute: true,
   });
