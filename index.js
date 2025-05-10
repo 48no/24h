@@ -1,14 +1,10 @@
 const { Client } = require("discord.js-selfbot-v13");
-const { joinVoiceChannel, getVoiceConnection } = require("@discordjs/voice");
-const express = require("express");
-const app = express();
-const client = new Client();
-
 const { Client } = require("discord.js-selfbot-v13");
 const { joinVoiceChannel, getVoiceConnection } = require("@discordjs/voice");
 const express = require("express");
 const app = express();
 const client = new Client();
+
 const axios = require("axios");  // لطلب الردود من API خارجي
 const API_KEY = "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"; // استبدل هذا بمفتاح الـ API الخاص بك
 const PRAYER_ROOM_ID = "1295859806468440135";  // معرف غرفة الأدعية
