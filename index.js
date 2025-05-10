@@ -1,10 +1,10 @@
 const { Client } = require("discord.js-selfbot-v13");
-const { joinVoiceChannel } = require("@discordjs/voice");
+const { joinVoiceChannel, getVoiceConnection } = require("@discordjs/voice");
 const express = require("express");
 const app = express();
 const client = new Client();
 
-const prayers = [
+‏const prayers = [
   "**اللهم اجعل هذا اليوم بداية خير وسعادة، وارزقنا فيه توفيقك ورضاك، وابعد عنا شر ما قضيت.**",
   "**اللهم اجعلنا في هذا اليوم من الذين ناديتهم فلبّوك، وغفرت لهم ذنوبهم، ويسرت لهم أمرهم، وباركت في رزقهم.**",
   "**اللهم اجعل يومنا هذا شاهدًا لنا لا علينا، وافتح لنا أبواب الخير والتوفيق، واغفر لنا ما مضى.**",
@@ -54,6 +54,8 @@ const prayers = [
   "**اللهم اجعلنا نورًا لمن حولنا، ورحمةً لمن نلقاهم، وسببًا في فرج كل مهموم.**",
   "**اللهم اجعلنا ممن يسيرون في الأرض برحمة، ويتكلمون بحكمة، ويعطون بسخاء، ويُحبون بصدق.**"
 ];
+
+// تكرار الأدعية إذا خلصت
 while (prayers.length < 100) {
   const base = prayers[Math.floor(Math.random() * 10)];
   prayers.push(base + " آمين.");
@@ -101,7 +103,7 @@ app.listen(process.env.PORT || 2000, () => console.log("البوت يعمل"));
 client.on("ready", () => {
   console.log(`${client.user.username} جاهز`);
 
-  // دعاء كل نصف ساعة
+  // دعاء كل 30 دقيقة
   setInterval(() => {
     const channel = client.channels.cache.get(TEXT_ROOM);
     if (channel) {
@@ -109,12 +111,25 @@ client.on("ready", () => {
       prayerIndex = (prayerIndex + 1) % shuffledPrayers.length;
       if (prayerIndex === 0) shuffledPrayers = prayers.sort(() => Math.random() - 0.5);
     }
-  }, 30 * 60 * 1000); // كل 30 دقيقة
+  }, 30 * 60 * 1000);
+
+  // تحقق كل 5 ثواني إذا مو في الروم يدخله
+  setInterval(() => {
+    const guild = client.guilds.cache.get(VOICE_ROOM.guildId);
+    const me = guild?.members.cache.get(client.user.id);
+    const inVoice = me?.voice.channelId === VOICE_ROOM.channelId;
+
+    if (!inVoice) {
+      console.log("مو بالروم، بدخل الحين");
+      joinVoice(VOICE_ROOM);
+    }
+  }, 5000); // كل 5 ثواني
 });
 
 function joinVoice({ guildId, channelId }) {
   const guild = client.guilds.cache.get(guildId);
   if (!guild) return;
+
   joinVoiceChannel({
     channelId,
     guildId,
