@@ -81,10 +81,15 @@ const triggerWords = ["كوري", "كور", "كرو", "وليد", "كوره", "�
 const triggerReplies = ["عيوني", "سم", "ارحب", "لبيه", "امر"];
 
 app.get("/", async (_, res) => {
+  if (!client.user) {
+    return res.send("البوت لم يسجل الدخول بعد. حاول لاحقًا.");
+  }
+
   const user = client.user;
   const avatar = user.displayAvatarURL();
   const username = user.username;
   const id = user.id;
+
   res.send(`
     <body style="background:#111;color:white;text-align:center;font-family:sans-serif">
       <h1 style="color:#0f0">البوت شغال 24 ساعة</h1>
