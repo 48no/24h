@@ -54,15 +54,18 @@ const prayers = [
   "**اللهم اجعلنا نورًا لمن حولنا، ورحمةً لمن نلقاهم، وسببًا في فرج كل مهموم.**",
   "**اللهم اجعلنا ممن يسيرون في الأرض برحمة، ويتكلمون بحكمة، ويعطون بسخاء، ويُحبون بصدق.**"
 ];
-
+while (prayers.length < 100) {
+  const base = prayers[Math.floor(Math.random() * 10)];
+  prayers.push(base + " آمين.");
+}
 let shuffledPrayers = prayers.sort(() => Math.random() - 0.5);
 let prayerIndex = 0;
 
 const VOICE_ROOMS = [
-  { guildId: "1295847578700878026", channelId: "1295860054448148511" }
+  { guildId: "1295847578700878026", channelId: "1295860054448148511" }  // فواز
 ];
-const TEXT_ROOM = "1295859825061793904";
-const RESPONSE_ROOM = "1295859806468440135";
+const TEXT_ROOM = "1295859825061793904"; // تحديث روم الدعاء
+const RESPONSE_ROOM = "1295859806468440135"; // تحديث روم الردود
 
 const greetings = [
   "سلام", "السلام", "سلام عليكم", "السلام عليكم", "سلام عليكم ورحمه",
@@ -109,10 +112,9 @@ app.get("/", async (_, res) => {
 });
 
 app.get("/join2", (_, res) => {
-  joinVoice(VOICE_ROOMS[0]);
+  joinVoice(VOICE_ROOMS[0]); // استخدم العنصر الموجود
   res.send("تم دخول روم فواز");
 });
-
 app.listen(process.env.PORT || 2000, () => console.log("Ready 24H"));
 
 client.on("ready", () => {
@@ -134,7 +136,7 @@ client.on("ready", () => {
       prayerIndex = (prayerIndex + 1) % shuffledPrayers.length;
       if (prayerIndex === 0) shuffledPrayers = prayers.sort(() => Math.random() - 0.5);
     }
-  }, 5 * 60 * 1000);
+  }, 5 * 60 * 1000); // كل 5 دقايق
 });
 
 client.on("messageCreate", (msg) => {
@@ -156,26 +158,6 @@ client.on("messageCreate", (msg) => {
   if (triggerWords.some(word => content.includes(word))) {
     msg.reply(triggerReplies[Math.floor(Math.random() * triggerReplies.length)]);
   }
-
-  if (msg.reference || content.includes("هههه") || content.includes("😂") || content.includes("😹")) {
-    msg.reply("دوم الضحكة");
-  }
-
-  if (content.includes("احد موجود") || content.includes("موجودين")) {
-    msg.reply("موجودين موجودين");
-  }
-
-  if (content.includes("في بث")) {
-    msg.reply("***- :a281108517547495657587~1: ماندري اذا حدد وقت للبثوث");
-  }
-
-  if (content.includes("قروب الواتس")) {
-    msg.reply("*** - قروب الواتس ذا هو [اضغط هنا](https://whatsapp.com/channel/0029VaW8D6B3AzNQvVsEbk0x)***");
-  }
-
-  if (content.includes("كيف افتح تكت") || content.includes("مفتوح تقديم أداره")) {
-    msg.reply("*** تقدر تروح https://discord.com/channels/1295847578700878026/1296771411758682153 وتفتح تكت عليا الأفضل واسمه شكاوي ***");
-  }
 });
 
 function joinVoice({ guildId, channelId }) {
@@ -192,3 +174,9 @@ function joinVoice({ guildId, channelId }) {
 }
 
 client.login(process.env.token);
+
+
+
+
+
+وش تنصحني أضيف كلام عليه ردود
