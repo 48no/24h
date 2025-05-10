@@ -1,5 +1,4 @@
 const { Client } = require("discord.js-selfbot-v13");
-const { Client } = require("discord.js-selfbot-v13");
 const { joinVoiceChannel, getVoiceConnection } = require("@discordjs/voice");
 const express = require("express");
 const app = express();
