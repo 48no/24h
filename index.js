@@ -62,7 +62,7 @@ let shuffledPrayers = prayers.sort(() => Math.random() - 0.5);
 let prayerIndex = 0;
 
 const VOICE_ROOMS = [
-  { guildId: "1295847578700878026", channelId: "1295860099210022933" }  // فواز
+  { guildId: "1295847578700878026", channelId: "1295860054448148511" }  // فواز
 ];
 const TEXT_ROOM = "1295859806468440135";
 
