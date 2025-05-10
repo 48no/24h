@@ -174,9 +174,3 @@ function joinVoice({ guildId, channelId }) {
 }
 
 client.login(process.env.token);
-
-
-
-
-
-وش تنصحني أضيف كلام عليه ردود
