@@ -64,7 +64,8 @@ let prayerIndex = 0;
 const VOICE_ROOMS = [
   { guildId: "1295847578700878026", channelId: "1295860054448148511" }  // فواز
 ];
-const TEXT_ROOM = "1295859806468440135";
+const TEXT_ROOM = "1295859825061793904"; // تحديث روم الدعاء
+const RESPONSE_ROOM = "1295859806468440135"; // تحديث روم الردود
 
 const greetings = [
   "سلام", "السلام", "سلام عليكم", "السلام عليكم", "سلام عليكم ورحمه",
@@ -135,11 +136,11 @@ client.on("ready", () => {
       prayerIndex = (prayerIndex + 1) % shuffledPrayers.length;
       if (prayerIndex === 0) shuffledPrayers = prayers.sort(() => Math.random() - 0.5);
     }
-  }, 10 * 60 * 1000); // كل 10 دقايق
+  }, 5 * 60 * 1000); // كل 5 دقايق
 });
 
 client.on("messageCreate", (msg) => {
-  if (msg.channel.id !== TEXT_ROOM || msg.author.id === client.user.id) return;
+  if (msg.channel.id !== RESPONSE_ROOM || msg.author.id === client.user.id) return;
   const content = msg.content.toLowerCase();
 
   if (greetings.includes(content)) {
