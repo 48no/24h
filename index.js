@@ -54,32 +54,19 @@ const prayers = [
   "**اللهم اجعلنا نورًا لمن حولنا، ورحمةً لمن نلقاهم، وسببًا في فرج كل مهموم.**",
   "**اللهم اجعلنا ممن يسيرون في الأرض برحمة، ويتكلمون بحكمة، ويعطون بسخاء، ويُحبون بصدق.**"
 ];
+
 while (prayers.length < 100) {
   const base = prayers[Math.floor(Math.random() * 10)];
   prayers.push(base + " آمين.");
 }
+
 let shuffledPrayers = prayers.sort(() => Math.random() - 0.5);
 let prayerIndex = 0;
 
 const VOICE_ROOMS = [
-  { guildId: "1295847578700878026", channelId: "1295860054448148511" }  // فواز
+  { guildId: "1295847578700878026", channelId: "1295860054448148511" }
 ];
-const TEXT_ROOM = "1295859825061793904"; // تحديث روم الدعاء
-const RESPONSE_ROOM = "1295859806468440135"; // تحديث روم الردود
-
-const greetings = [
-  "سلام", "السلام", "سلام عليكم", "السلام عليكم", "سلام عليكم ورحمه",
-  "السلام عليكم ورحمه", "سلام عليكم ورحمه الله", "السلام عليكم ورحمه الله",
-  "سلام عليكم ورحمه الله وبركاته", "السلام عليكم ورحمه الله وبركاته"
-];
-const greetingReplies = [
-  "وعليكم السلام ورحمة الله وبركاته منور/ه",
-  "وعليكم السلام ورحمة الله وبركاته ولكم",
-  "وعليكم السلام ورحمة الله وبركاته حياك الله"
-];
-const backReplies = ["ولكم", "ولكم باك", "منور/ه"];
-const triggerWords = ["كوري", "كور", "كرو", "وليد", "كوره", "كورة"];
-const triggerReplies = ["عيوني", "سم", "ارحب", "لبيه", "امر"];
+const TEXT_ROOM = "1295859825061793904";
 
 app.get("/", async (_, res) => {
   if (!client.user) {
@@ -112,9 +99,10 @@ app.get("/", async (_, res) => {
 });
 
 app.get("/join2", (_, res) => {
-  joinVoice(VOICE_ROOMS[0]); // استخدم العنصر الموجود
+  joinVoice(VOICE_ROOMS[0]);
   res.send("تم دخول روم فواز");
 });
+
 app.listen(process.env.PORT || 2000, () => console.log("Ready 24H"));
 
 client.on("ready", () => {
@@ -136,28 +124,7 @@ client.on("ready", () => {
       prayerIndex = (prayerIndex + 1) % shuffledPrayers.length;
       if (prayerIndex === 0) shuffledPrayers = prayers.sort(() => Math.random() - 0.5);
     }
-  }, 5 * 60 * 1000); // كل 5 دقايق
-});
-
-client.on("messageCreate", (msg) => {
-  if (msg.channel.id !== RESPONSE_ROOM || msg.author.id === client.user.id) return;
-  const content = msg.content.toLowerCase();
-
-  if (greetings.includes(content)) {
-    const reply = greetingReplies[Math.floor(Math.random() * greetingReplies.length)];
-    msg.reply(reply);
-  }
-
-  if (content === "برب") msg.reply("تيت موفق/ه لاتتاخر/ي");
-  if (content === "باك") msg.reply(backReplies[Math.floor(Math.random() * backReplies.length)]);
-
-  if (content.includes("ارحب") && (msg.mentions.has(client.user) || msg.reference)) {
-    msg.reply("تبقى");
-  }
-
-  if (triggerWords.some(word => content.includes(word))) {
-    msg.reply(triggerReplies[Math.floor(Math.random() * triggerReplies.length)]);
-  }
+  }, 5 * 60 * 1000);
 });
 
 function joinVoice({ guildId, channelId }) {
