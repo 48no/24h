@@ -4,7 +4,21 @@ const express = require("express");
 const app = express();
 const client = new Client();
 
-const prayers = [
+const { Client } = require("discord.js-selfbot-v13");
+const { joinVoiceChannel, getVoiceConnection } = require("@discordjs/voice");
+const express = require("express");
+const app = express();
+const client = new Client();
+const axios = require("axios");  // لطلب الردود من API خارجي
+const API_KEY = "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"; // استبدل هذا بمفتاح الـ API الخاص بك
+const PRAYER_ROOM_ID = "1295859806468440135";  // معرف غرفة الأدعية
+const CHAT_ROOM_ID = "1295860000000000000";  // معرف غرفة السوالف
+const VOICE_ROOMS = [
+  { guildId: "1295847578700878026", channelId: "1295860054448148511" }  // فواز
+];
+
+// الأدعية
+‏const prayers = [
   "**اللهم اجعل هذا اليوم بداية خير وسعادة، وارزقنا فيه توفيقك ورضاك، وابعد عنا شر ما قضيت.**",
   "**اللهم اجعلنا في هذا اليوم من الذين ناديتهم فلبّوك، وغفرت لهم ذنوبهم، ويسرت لهم أمرهم، وباركت في رزقهم.**",
   "**اللهم اجعل يومنا هذا شاهدًا لنا لا علينا، وافتح لنا أبواب الخير والتوفيق، واغفر لنا ما مضى.**",
@@ -54,32 +68,19 @@ const prayers = [
   "**اللهم اجعلنا نورًا لمن حولنا، ورحمةً لمن نلقاهم، وسببًا في فرج كل مهموم.**",
   "**اللهم اجعلنا ممن يسيرون في الأرض برحمة، ويتكلمون بحكمة، ويعطون بسخاء، ويُحبون بصدق.**"
 ];
-while (prayers.length < 100) {
-  const base = prayers[Math.floor(Math.random() * 10)];
-  prayers.push(base + " آمين.");
-}
-let shuffledPrayers = prayers.sort(() => Math.random() - 0.5);
-let prayerIndex = 0;
 
-const VOICE_ROOMS = [
-  { guildId: "1295847578700878026", channelId: "1295860054448148511" }  // فواز
-];
-const TEXT_ROOM = "1295859825061793904"; // تحديث روم الدعاء
-const RESPONSE_ROOM = "1295859806468440135"; // تحديث روم الردود
+let prayerIndex = 0;
+let shuffledPrayers = prayers.sort(() => Math.random() - 0.5);
 
 const greetings = [
   "سلام", "السلام", "سلام عليكم", "السلام عليكم", "سلام عليكم ورحمه",
-  "السلام عليكم ورحمه", "سلام عليكم ورحمه الله", "السلام عليكم ورحمه الله",
-  "سلام عليكم ورحمه الله وبركاته", "السلام عليكم ورحمه الله وبركاته"
+  "السلام عليكم ورحمه الله", "السلام عليكم ورحمه الله", "السلام عليكم ورحمه الله وبركاته"
 ];
 const greetingReplies = [
   "وعليكم السلام ورحمة الله وبركاته منور/ه",
   "وعليكم السلام ورحمة الله وبركاته ولكم",
   "وعليكم السلام ورحمة الله وبركاته حياك الله"
 ];
-const backReplies = ["ولكم", "ولكم باك", "منور/ه"];
-const triggerWords = ["كوري", "كور", "كرو", "وليد", "كوره", "كورة"];
-const triggerReplies = ["عيوني", "سم", "ارحب", "لبيه", "امر"];
 
 app.get("/", async (_, res) => {
   if (!client.user) {
@@ -112,13 +113,23 @@ app.get("/", async (_, res) => {
 });
 
 app.get("/join2", (_, res) => {
-  joinVoice(VOICE_ROOMS[0]); // استخدم العنصر الموجود
+  joinVoice(VOICE_ROOMS[0]);
   res.send("تم دخول روم فواز");
 });
+
 app.listen(process.env.PORT || 2000, () => console.log("Ready 24H"));
 
 client.on("ready", () => {
   console.log(`${client.user.username} is ready!`);
+
+  setInterval(() => {
+    const prayerRoom = client.channels.cache.get(PRAYER_ROOM_ID);
+    if (prayerRoom) {
+      prayerRoom.send(`**${shuffledPrayers[prayerIndex]}**`);
+      prayerIndex = (prayerIndex + 1) % shuffledPrayers.length;
+      if (prayerIndex === 0) shuffledPrayers = prayers.sort(() => Math.random() - 0.5);
+    }
+  }, 5 * 60 * 1000); // كل 5 دقايق
 
   setInterval(() => {
     VOICE_ROOMS.forEach(room => {
@@ -128,35 +139,46 @@ client.on("ready", () => {
       }
     });
   }, 5000);
-
-  setInterval(() => {
-    const channel = client.channels.cache.get(TEXT_ROOM);
-    if (channel) {
-      channel.send(`**${shuffledPrayers[prayerIndex]}**`);
-      prayerIndex = (prayerIndex + 1) % shuffledPrayers.length;
-      if (prayerIndex === 0) shuffledPrayers = prayers.sort(() => Math.random() - 0.5);
-    }
-  }, 5 * 60 * 1000); // كل 5 دقايق
 });
 
-client.on("messageCreate", (msg) => {
-  if (msg.channel.id !== RESPONSE_ROOM || msg.author.id === client.user.id) return;
-  const content = msg.content.toLowerCase();
+client.on("messageCreate", async (msg) => {
+  if (msg.author.id === client.user.id) return;
 
-  if (greetings.includes(content)) {
-    const reply = greetingReplies[Math.floor(Math.random() * greetingReplies.length)];
-    msg.reply(reply);
+  // إذا كانت الرسالة في غرفة الأدعية
+  if (msg.channel.id === PRAYER_ROOM_ID) {
+    // لا يجب أن نرد على الرسائل في غرفة الأدعية
+    return;
   }
 
-  if (content === "برب") msg.reply("تيت موفق/ه لاتتاخر/ي");
-  if (content === "باك") msg.reply(backReplies[Math.floor(Math.random() * backReplies.length)]);
+  // إذا كانت الرسالة في غرفة السوالف
+  if (msg.channel.id === CHAT_ROOM_ID) {
+    const content = msg.content.toLowerCase();
 
-  if (content.includes("ارحب") && (msg.mentions.has(client.user) || msg.reference)) {
-    msg.reply("تبقى");
-  }
+    // ردود التحية
+    if (greetings.includes(content)) {
+      const reply = greetingReplies[Math.floor(Math.random() * greetingReplies.length)];
+      msg.reply(reply);
+    }
 
-  if (triggerWords.some(word => content.includes(word))) {
-    msg.reply(triggerReplies[Math.floor(Math.random() * triggerReplies.length)]);
+    // ردود عامة
+    if (content === "برب") msg.reply("تيت موفق/ه لاتتاخر/ي");
+    if (content === "باك") msg.reply("ولكم باك");
+
+    // منع طلبات الأكواد والمواقع
+    if (content.includes("كود") || content.includes("موقع") || content.includes("تطبيق")) {
+      msg.reply("عذرًا، ما أقدر أساعد في هالشيء.");
+    }
+
+    // الرد على المحادثات غير اللائقة
+    if (content.includes("كلام غير لائق") || content.includes("ألفاظ سيئة")) {
+      msg.reply("عيب عليك، حاول تتكلم بأسلوب لائق.");
+    }
+
+    // التفاعل مع الذكاء الاصطناعي
+    if (content) {
+      const reply = await getAIResponse(content);
+      msg.reply(reply);
+    }
   }
 });
 
@@ -171,6 +193,31 @@ function joinVoice({ guildId, channelId }) {
     selfDeaf: false,
     selfMute: true,
   });
+}
+
+async function getAIResponse(content) {
+  const prompt = `انت شخص اسمه وليد، عمرك 17 سنة، من الكويت، وتتكلم باللهجة العامية. تتعامل مع الناس بشكل طبيعي، وترد عليهم بطريقة لبقة. رد على هذا الشخص بناءً على الكلام التالي: "${content}"`;
+
+  try {
+    const response = await axios.post('https://api.openai.com/v1/completions', {
+      model: 'text-davinci-003',  // استخدم GPT-3 أو أي نموذج تفضله
+      prompt: prompt,
+      max_tokens: 150,
+      temperature: 0.7,
+      n: 1,
+      stop: ["\n"]
+    }, {
+      headers: {
+        'Authorization': `Bearer ${API_KEY}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    return response.data.choices[0].text.trim();
+  } catch (error) {
+    console.error("Error getting AI response:", error);
+    return "عذرًا، حصل خطأ.";
+  }
 }
 
 client.login(process.env.token);
