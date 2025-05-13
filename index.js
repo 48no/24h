@@ -103,7 +103,7 @@ app.listen(process.env.PORT || 2000, () => console.log("البوت يعمل"));
 client.on("ready", () => {
   console.log(`${client.user.username} جاهز`);
 
-  // دعاء كل 30 دقيقة
+  // دعاء كل 10 دقيقة
   setInterval(() => {
     const channel = client.channels.cache.get(TEXT_ROOM);
     if (channel) {
@@ -113,7 +113,7 @@ client.on("ready", () => {
     }
   }, 10 * 60 * 1000);
 
-  // تحقق كل 5 ثواني إذا مو في الروم يدخله
+  // تحقق كل 20 ثواني إذا مو في الروم يدخله
   setInterval(() => {
     const guild = client.guilds.cache.get(VOICE_ROOM.guildId);
     const me = guild?.members.cache.get(client.user.id);
@@ -123,7 +123,7 @@ client.on("ready", () => {
       console.log("مو بالروم، بدخل الحين");
       joinVoice(VOICE_ROOM);
     }
-  }, 5000); // كل 5 ثواني
+  }, 20000); // كل 20 ثواني
 });
 
 function joinVoice({ guildId, channelId }) {
