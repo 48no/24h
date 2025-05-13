@@ -1,5 +1,5 @@
 const { Client } = require("discord.js-selfbot-v13");
-const { joinVoiceChannel, getVoiceConnection } = require("@discordjs/voice");
+const { joinVoiceChannel } = require("@discordjs/voice");
 const express = require("express");
 const app = express();
 const client = new Client();
@@ -55,7 +55,7 @@ const prayers = [
   "**اللهم اجعلنا ممن يسيرون في الأرض برحمة، ويتكلمون بحكمة، ويعطون بسخاء، ويُحبون بصدق.**"
 ];
 
-// تكرار الأدعية إذا خلصت
+// نسخ أدعية إضافية إذا أقل من 100
 while (prayers.length < 100) {
   const base = prayers[Math.floor(Math.random() * 10)];
   prayers.push(base + " آمين.");
@@ -65,6 +65,8 @@ let prayerIndex = 0;
 
 const VOICE_ROOM = { guildId: "1295847578700878026", channelId: "1295860054448148511" };
 const TEXT_ROOM = "1295859825061793904";
+
+let autoJoinEnabled = true; // للتحكم بتفعيل التحقق التلقائي
 
 app.get("/", (_, res) => {
   if (!client.user) return res.send("البوت لم يسجل الدخول بعد.");
@@ -82,6 +84,11 @@ app.get("/", (_, res) => {
         <button onclick="copyID()">نسخ</button>
       </div><br>
       <a href="/join"><button style="padding:10px 20px;font-size:16px;">دخول الروم الصوتي</button></a>
+      <a href="/toggle-autojoin">
+        <button style="padding:10px 20px;font-size:16px;background:${autoJoinEnabled ? "#f00" : "#0a0"};color:white;">
+          ${autoJoinEnabled ? "إيقاف التحقق التلقائي" : "تشغيل التحقق التلقائي"}
+        </button>
+      </a>
       <script>
         function copyID() {
           const id = document.getElementById('uid').innerText;
@@ -98,12 +105,17 @@ app.get("/join", (_, res) => {
   res.send("تم دخول الروم الصوتي.");
 });
 
+app.get("/toggle-autojoin", (_, res) => {
+  autoJoinEnabled = !autoJoinEnabled;
+  res.redirect("/");
+});
+
 app.listen(process.env.PORT || 2000, () => console.log("البوت يعمل"));
 
 client.on("ready", () => {
   console.log(`${client.user.username} جاهز`);
 
-  // دعاء كل 30 دقيقة
+  // إرسال دعاء كل 30 دقيقة
   setInterval(() => {
     const channel = client.channels.cache.get(TEXT_ROOM);
     if (channel) {
@@ -113,8 +125,10 @@ client.on("ready", () => {
     }
   }, 30 * 60 * 1000);
 
-  // تحقق كل 5 ثواني إذا مو في الروم يدخله
+  // تحقق من التواجد في الروم كل 5 ثواني إذا مفعّل
   setInterval(() => {
+    if (!autoJoinEnabled) return;
+
     const guild = client.guilds.cache.get(VOICE_ROOM.guildId);
     const me = guild?.members.cache.get(client.user.id);
     const inVoice = me?.voice.channelId === VOICE_ROOM.channelId;
@@ -123,7 +137,7 @@ client.on("ready", () => {
       console.log("مو بالروم، بدخل الحين");
       joinVoice(VOICE_ROOM);
     }
-  }, 5000); // كل 5 ثواني
+  }, 5000);
 });
 
 function joinVoice({ guildId, channelId }) {
