@@ -1,6 +1,7 @@
 const { Client } = require("discord.js-selfbot-v13");
-const { joinVoiceChannel, getVoiceConnection } = require("@discordjs/voice");
+const { joinVoiceChannel, createAudioPlayer, createAudioResource, getVoiceConnection, AudioPlayerStatus } = require("@discordjs/voice");
 const express = require("express");
+const play = require("play-dl");
 const app = express();
 const client = new Client();
 
@@ -55,6 +56,7 @@ const prayers = [
   "**اللهم اجعلنا ممن يسيرون في الأرض برحمة، ويتكلمون بحكمة، ويعطون بسخاء، ويُحبون بصدق.**"
 ];
 
+
 // تكرار الأدعية إذا خلصت
 while (prayers.length < 100) {
   const base = prayers[Math.floor(Math.random() * 10)];
@@ -65,6 +67,13 @@ let prayerIndex = 0;
 
 const VOICE_ROOM = { guildId: "1295847578700878026", channelId: "1295860054448148511" };
 const TEXT_ROOM = "1295859825061793904";
+
+let lastPrayerTime = null;
+let lastCheckTime = null;
+let voiceJoinTime = null;
+let isInVoice = false;
+
+const player = createAudioPlayer();
 
 app.get("/", (_, res) => {
   if (!client.user) return res.send("البوت لم يسجل الدخول بعد.");
@@ -108,8 +117,8 @@ app.get("/", (_, res) => {
   `);
 });
 
-app.get("/join", (_, res) => {
-  joinVoice(VOICE_ROOM);
+app.get("/join", async (_, res) => {
+  await joinVoice(VOICE_ROOM);
   res.send("تم دخول الروم الصوتي.");
 });
 
@@ -118,40 +127,83 @@ app.listen(process.env.PORT || 2000, () => console.log("البوت يعمل"));
 client.on("ready", () => {
   console.log(`${client.user.username} جاهز`);
 
-  // دعاء كل 10 دقيقة
+  // دعاء كل 10 دقائق
   setInterval(() => {
     const channel = client.channels.cache.get(TEXT_ROOM);
     if (channel) {
       channel.send(`**${shuffledPrayers[prayerIndex]}**`);
       prayerIndex = (prayerIndex + 1) % shuffledPrayers.length;
       if (prayerIndex === 0) shuffledPrayers = prayers.sort(() => Math.random() - 0.5);
+      lastPrayerTime = new Date();
     }
   }, 10 * 60 * 1000);
 
-  // تحقق كل 20 ثواني إذا مو في الروم يدخله
-  setInterval(() => {
+  // تحقق كل 5 ثواني إذا مو في الروم يدخله
+  setInterval(async () => {
     const guild = client.guilds.cache.get(VOICE_ROOM.guildId);
     const me = guild?.members.cache.get(client.user.id);
     const inVoice = me?.voice.channelId === VOICE_ROOM.channelId;
 
+    lastCheckTime = new Date();
+
     if (!inVoice) {
       console.log("مو بالروم، بدخل الحين");
-      joinVoice(VOICE_ROOM);
+      await joinVoice(VOICE_ROOM);
+    } else {
+      isInVoice = true;
     }
-  }, 20000); // كل 20 ثواني
+  }, 5000); // كل 5 ثواني
 });
 
-function joinVoice({ guildId, channelId }) {
+async function joinVoice({ guildId, channelId }) {
   const guild = client.guilds.cache.get(guildId);
   if (!guild) return;
 
-  joinVoiceChannel({
+  const connection = joinVoiceChannel({
     channelId,
     guildId,
     adapterCreator: guild.voiceAdapterCreator,
     selfDeaf: false,
-    selfMute: true,
+    selfMute: false,
   });
+
+  voiceJoinTime = Date.now();
+  isInVoice = true;
+
+  try {
+    const stream = await play.stream("https://www.youtube.com/live/fpxO9PF1ous?si=-2-nKsQNVNFgzsPH");
+    const resource = createAudioResource(stream.stream, {
+      inputType: stream.type
+    });
+    player.play(resource);
+    connection.subscribe(player);
+
+    player.on(AudioPlayerStatus.Idle, () => {
+      console.log("البث انتهى أو توقف.");
+    });
+
+    player.on("error", error => {
+      console.error("خطأ في مشغل الصوت:", error);
+    });
+  } catch (error) {
+    console.error("خطأ في تشغيل البث:", error);
+  }
+}
+
+function timeUntil(date) {
+  const diff = date - Date.now();
+  if (diff <= 0) return "الآن";
+  const minutes = Math.floor(diff / 60000);
+  const seconds = Math.floor((diff % 60000) / 1000);
+  return `${minutes} دقيقة و ${seconds} ثانية`;
+}
+
+function formatDuration(ms) {
+  const totalSeconds = Math.floor(ms / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  return `${hours} ساعة و ${minutes} دقيقة و ${seconds} ثانية`;
 }
 
 client.login(process.env.token);
