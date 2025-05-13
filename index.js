@@ -68,10 +68,16 @@ const TEXT_ROOM = "1295859825061793904";
 
 app.get("/", (_, res) => {
   if (!client.user) return res.send("البوت لم يسجل الدخول بعد.");
+
   const user = client.user;
   const avatar = user.displayAvatarURL();
   const username = user.username;
   const id = user.id;
+
+  const now = Date.now();
+
+  const prayerNext = lastPrayerTime ? new Date(lastPrayerTime.getTime() + 10 * 60 * 1000) : null;
+  const checkNext = lastCheckTime ? new Date(lastCheckTime.getTime() + 5000) : null;
 
   res.send(`
     <body style="background:#111;color:white;text-align:center;font-family:sans-serif">
@@ -81,7 +87,16 @@ app.get("/", (_, res) => {
       <div><strong>ID:</strong> <span id="uid">${id}</span>
         <button onclick="copyID()">نسخ</button>
       </div><br>
-      <a href="/join"><button style="padding:10px 20px;font-size:16px;">دخول الروم الصوتي</button></a>
+
+      <div><strong>آخر دعاء:</strong> ${lastPrayerTime ? lastPrayerTime.toLocaleTimeString() : "—"}</div>
+      <div><strong>باقي للدعاء الجاي:</strong> ${prayerNext ? timeUntil(prayerNext) : "—"}</div>
+      <hr style="margin:10px 0">
+      <div><strong>آخر تحقق من الروم:</strong> ${lastCheckTime ? lastCheckTime.toLocaleTimeString() : "—"}</div>
+      <div><strong>باقي للتحقق القادم:</strong> ${checkNext ? timeUntil(checkNext) : "—"}</div>
+      <div><strong>مدة البقاء في الروم:</strong> ${voiceJoinTime && isInVoice ? formatDuration(now - voiceJoinTime) : "مو في الروم"}</div>
+      <div><strong>الحالة:</strong> ${isInVoice ? "<span style='color:#0f0'>في الروم</span>" : "<span style='color:red'>مو في الروم</span>"}</div>
+
+      <br><a href="/join"><button style="padding:10px 20px;font-size:16px;">دخول الروم الصوتي</button></a>
       <script>
         function copyID() {
           const id = document.getElementById('uid').innerText;
