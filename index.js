@@ -163,7 +163,7 @@ async function joinVoice({ guildId, channelId }) {
     channelId,
     guildId,
     adapterCreator: guild.voiceAdapterCreator,
-    selfDeaf: false,
+    selfDeaf: true,
     selfMute: false,
   });
 
