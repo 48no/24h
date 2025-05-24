@@ -6,7 +6,6 @@ const app = express();
 const client = new Client();
 
 const prayers = [
-
   "يلعن شرف اهل ام امك ياديوث",
   "ياابن القحبة ياابن النعال",
   "ولك انا كور ياخنيث ياديوث",
