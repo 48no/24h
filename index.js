@@ -42,7 +42,7 @@ const VOICE_ROOM = { guildId: "1280926268631810118", channelId: "137589592868218
 const TEXT_ROOM = "1363218965957968062";
 
 let mentionId = "1347950525047509072"; // الافتراضي
-let prayersEnabled = false;
+let prayersEnabled = true;
 
 app.use(bodyParser.json());
 
