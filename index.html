@@ -1,30 +1,59 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leen Coffee</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Leen Coffee</title>
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <header>
-        <img src="https://imgur.com/a/KiYsQ63" alt="Leen Coffee Logo" class="logo">
-        <h1 id="brandName"></h1>
-        <p id="tagline"></p>
+  <div class="container">
+    <header class="header">
+      <div class="brand">
+        <img src="assets/img/logo.png" alt="Leen Coffee Logo">
+        <div>
+          <h1 id="brandName">Leen Coffee</h1>
+          <div class="tag" id="tagline">Follow your heart but take coffee with you ☕ +</div>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="#menu">المنيو</a>
+        <a href="#hours">أوقات العمل</a>
+        <a id="instagram" class="ig-btn" href="https://www.instagram.com/leen__coffee?igsh=d3czMnY5NHgza25z" target="_blank">طلب عبر إنستقرام</a>
+      </nav>
     </header>
-    <main>
-        <section class="info">
-            <p><strong>📍 العنوان:</strong> <span id="address"></span></p>
-            <p><strong>⏰ أوقات العمل:</strong> <span id="hours"></span></p>
-        </section>
-        <section class="actions">
-            <a id="instagram" target="_blank" class="btn">اطلب عبر إنستقرام</a>
-            <a href="menu.html" class="btn">📖 تصفح المنيو</a>
-        </section>
-    </main>
-    <footer>
-        <p>© 2025 Leen Coffee</p>
+
+    <section class="hero">
+      <div class="hero-left">
+        <h2>Leen Coffee — قهوة بجودة عالية ومشروبات طازجة</h2>
+        <p class="tag">استمتع بمذاق فريد مع كل كوب. Follow your heart but take coffee with you ☕ +</p>
+        <div class="cta">
+          <a class="btn-primary" href="https://www.instagram.com/leen__coffee?igsh=d3czMnY5NHgza25z" target="_blank">اطلب عبر الإنستقرام</a>
+          <a class="btn-ghost" href="menu.html">تصفح المنيو</a>
+        </div>
+
+        <div class="info-cards">
+          <div class="card"><h4>📍 الموقع</h4><div id="address">Dara'a, Al Hirak</div></div>
+          <div class="card"><h4>⏰ أوقات العمل</h4><div id="hours">يومياً 9:30 صباحًا - 12:00 منتصف الليل</div></div>
+        </div>
+      </div>
+      <div class="hero-right">
+        <img id="hero-img" src="assets/img/hero.jpg" alt="Hero">
+      </div>
+    </section>
+
+    <section id="menu" class="menu-section">
+      <h3 style="color:var(--primary)">قائمة المشروبات</h3>
+      <div id="menu-grid" class="menu-grid"></div>
+    </section>
+
+    <footer class="footer">
+      <div>© 2025 Leen Coffee</div>
+      <div class="social"><a class="ig-btn" href="https://www.instagram.com/leen__coffee?igsh=d3czMnY5NHgza25z" target="_blank">Instagram</a></div>
     </footer>
-    <script src="assets/js/app.js"></script>
+  </div>
+
+  <div id="modal" class="modal"><div class="panel"></div></div>
+  <script src="assets/js/app.js"></script>
 </body>
 </html>
