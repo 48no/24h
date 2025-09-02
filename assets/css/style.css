@@ -40,30 +40,6 @@ body{
 .menu-card ul{margin:6px 0 0; padding:0; list-style:none; color:var(--muted); font-size:14px}
 .menu-card li{display:flex; justify-content:space-between; align-items:center; margin-bottom:4px}
 
-/* زر أضف للسلة الأصفر */
-.btn-add-cart{
-  display:flex;
-  align-items:center;
-  gap:6px;
-  background: #FFD700; /* اللون الأصفر */
-  color: #000;
-  border:none;
-  border-radius:12px;
-  padding:6px 14px;
-  font-weight:700;
-  font-size:14px;
-  cursor:pointer;
-  box-shadow:0 6px 12px rgba(255,215,0,0.4);
-  transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
-}
-.btn-add-cart:hover{
-  transform: scale(1.08);
-  box-shadow:0 10px 20px rgba(255,215,0,0.6);
-  background:#FFE033; /* أصفر فاتح عند المرور */
-}
-.btn-add-cart svg{fill:#000;}
-
-/* Footer */
 .footer{margin-top:40px; border-top:1px solid rgba(255,255,255,0.04); padding-top:18px; display:flex; justify-content:space-between; align-items:center; gap:12px}
 .ig-btn{background:transparent; border:1px solid rgba(255,255,255,0.04); padding:8px 10px; border-radius:8px; color:var(--primary); display:inline-flex; gap:8px; align-items:center; text-decoration:none; transition:background .2s}
 .ig-btn:hover{background:rgba(255,215,0,0.08)}
@@ -99,6 +75,21 @@ body{
   transition:transform .2s ease;
 }
 .cart-button:hover{transform:scale(1.1);}
+.cart-count{
+  position:absolute;
+  top:-5px;
+  right:-5px;
+  background:red;
+  color:#fff;
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  font-size:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+}
 
 /* لوحة السلة */
 .cart-panel{
@@ -121,3 +112,24 @@ body{
 .cart-address{width:100%; padding:8px; border-radius:6px; margin-bottom:8px; border:1px solid rgba(255,255,255,0.1); background:#0e0e0e; color:#fff; font-size:14px;}
 .btn-small{background:var(--primary); color:#000; border:none; border-radius:6px; width:28px; height:28px; font-weight:800; cursor:pointer; margin-left:4px; transition:transform .18s ease;}
 .btn-small:hover{transform:translateY(-2px) scale(1.05);}
+
+/* Toast إشعار */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: -300px;
+  background: var(--primary);
+  color: #000;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 14px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  opacity: 0;
+  transition: all 0.6s ease;
+  z-index: 2000;
+}
+.toast.show {
+  left: 20px;
+  opacity: 1;
+}
