@@ -66,7 +66,7 @@ function openModal(section){
   const note = create('div', null, 'اطلب عبر حساب الإنستقرام أو امسح QR');
   note.style.color = 'var(--muted)';
   const qr = create('div','qr');
-  qr.innerHTML = '<img src="assets/img/logo.png" alt="QR" style="width:100%;height:100%;object-fit:cover;border-radius:6px">';
+  qr.innerHTML = '<img src="assets/img/hero.jpg" alt="QR" style="width:100%;height:100%;object-fit:cover;border-radius:6px">';
   panel.appendChild(row);
   row.appendChild(note);
   row.appendChild(qr);
