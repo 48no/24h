@@ -79,7 +79,6 @@ function updateCart(){
     ul.appendChild(li);
   }
 }
-}
 
 function sendOrder(){
   const phoneNumber="96565006690";
@@ -91,6 +90,7 @@ function sendOrder(){
   window.open(link,"_blank");
 }
 
+// Splash Screen
 window.addEventListener("load", () => {
   const splash = document.getElementById("splash");
   setTimeout(() => {
