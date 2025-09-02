@@ -144,15 +144,16 @@ function updateCartPanel(cfg){
   sendBtn.style.marginTop = '10px';
   sendBtn.onclick = () => {
     const phoneNumber = "96565006690"; // رقمك
-    let message = "طلب جديد:%0A";
-    for(let item in cart){
-      message += `${item} x${cart[item]}%0A`;
-    }
-    const location = $("#address") ? $("#address").textContent : '';
-    if(location) message += `الموقع: ${location}`;
+    let message = "طلب جديد:\n";
+for(let item in cart){
+  message += `${item} x${cart[item]}\n`;
+}
+const location = $("#address") ? $("#address").textContent : '';
+if(location) message += `الموقع: ${location}`;
 
-    const encoded = encodeURIComponent(message);
-    const link = `https://wa.me/${phoneNumber}?text=${encoded}`;
+// استبدال فقط الأحرف الخاصة الضرورية بدل encodeURIComponent كامل
+const link = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message).replace(/%20/g, ' ')}`;
+window.open(link, "_blank");
     window.open(link, "_blank");
   };
   cartPanel.appendChild(sendBtn);
