@@ -1,4 +1,4 @@
-let cart = []; // السلة
+let cart = {}; // السلة: { "اسم المنتج": كمية }
 
 async function fetchJSON(path){
   const r = await fetch(path);
@@ -78,7 +78,8 @@ function openModal(section, cfg){
     // زر إضافة للسلة
     const addBtn = create('button','btn-primary','أضف للسلة');
     addBtn.onclick = () => {
-      cart.push(it);
+      if(cart[it]) cart[it]++;
+      else cart[it] = 1;
       updateCartPanel(cfg);
     };
 
@@ -102,27 +103,51 @@ function updateCartPanel(cfg){
   const panel = $("#modal").querySelector('.panel');
   let cartPanel = panel.querySelector('.cart-panel');
   cartPanel.innerHTML = '';
+  cartPanel.style.borderTop = "1px solid #ccc";
+  cartPanel.style.paddingTop = "12px";
+  cartPanel.style.marginTop = "12px";
 
-  if(cart.length === 0){
+  if(Object.keys(cart).length === 0){
     cartPanel.textContent = 'السلة فارغة';
     return;
   }
 
   const ul = create('ul');
-  cart.forEach(item => {
-    const li = create('li', null, item);
+  for(let item in cart){
+    const li = create('li');
+    li.style.display = 'flex';
+    li.style.justifyContent = 'space-between';
+    li.style.alignItems = 'center';
+    li.style.marginBottom = '6px';
+
+    const name = create('span', null, `${item} x${cart[item]}`);
+
+    const controls = create('span');
+    const plus = create('button', 'btn-small','+');
+    plus.onclick = () => { cart[item]++; updateCartPanel(cfg); };
+    const minus = create('button', 'btn-small','-');
+    minus.onclick = () => {
+      cart[item]--;
+      if(cart[item]<=0) delete cart[item];
+      updateCartPanel(cfg);
+    };
+
+    controls.appendChild(minus);
+    controls.appendChild(plus);
+    li.appendChild(name);
+    li.appendChild(controls);
     ul.appendChild(li);
-  });
+  }
   cartPanel.appendChild(ul);
 
   const sendBtn = create('button','btn-primary','أرسل الطلب عبر واتس');
+  sendBtn.style.marginTop = '10px';
   sendBtn.onclick = () => {
     const phoneNumber = "96565006690"; // رقمك
     let message = "طلب جديد:%0A";
-    cart.forEach(it => {
-      message += `${it}%0A`;
-    });
-    // إضافة الموقع من الصفحة
+    for(let item in cart){
+      message += `${item} x${cart[item]}%0A`;
+    }
     const location = $("#address") ? $("#address").textContent : '';
     if(location) message += `الموقع: ${location}`;
 
