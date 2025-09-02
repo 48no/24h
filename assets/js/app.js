@@ -8,7 +8,7 @@ function $(sel){ return document.querySelector(sel); }
 function create(tag, cls, txt){
   const el = document.createElement(tag);
   if(cls) el.className = cls;
-  if(txt) el.textContent = txt;
+  if(txt) el.innerHTML = txt;
   return el;
 }
 
@@ -67,10 +67,12 @@ function updateCart(){
     const name=create('span',null,`${item} x${cart[item]}`);
     const controls=create('span');
     const plus=create('button','btn-small','+');
-    plus.onclick=()=>{cart[item]++;updateCart();}
+    plus.onclick = ()=>{cart[item]++; updateCart();}
     const minus=create('button','btn-small','-');
-    minus.onclick=()=>{
-      cart[item]--; if(cart[item]<=0) delete cart[item]; updateCart();
+    minus.onclick = ()=>{
+      cart[item]--; 
+      if(cart[item]<=0) delete cart[item]; 
+      updateCart();
     };
     controls.appendChild(minus);
     controls.appendChild(plus);
