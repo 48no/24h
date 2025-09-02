@@ -108,3 +108,46 @@ window.addEventListener("load",()=>{
   const splash=document.getElementById("splash");
   setTimeout(()=>{splash.classList.add("hidden");},2000);
 });
+// --- PWA: register service worker ---
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', async () => {
+    try {
+      const reg = await navigator.serviceWorker.register('/service-worker.js');
+      console.log('SW registered', reg);
+      // optional: prompt update flow
+      reg.addEventListener('updatefound', () => {
+        const newWorker = reg.installing;
+        newWorker.addEventListener('statechange', () => {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            // new content available
+            showToast('نسخة جديدة متاحة. أعد تحميل الصفحة لتحديث.');
+          }
+        });
+      });
+    } catch (e) {
+      console.warn('SW registration failed', e);
+    }
+  });
+}
+
+// --- PWA: beforeinstallprompt (Add to Home Screen) ---
+let deferredPrompt;
+const installBtn = document.getElementById('btn-install');
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  if (installBtn) {
+    installBtn.style.display = 'inline-block';
+    installBtn.addEventListener('click', async () => {
+      installBtn.style.display = 'none';
+      deferredPrompt.prompt();
+      const choice = await deferredPrompt.userChoice;
+      if (choice.outcome === 'accepted') {
+        showToast('تم تثبيت التطبيق!');
+      } else {
+        showToast('تم إلغاء التثبيت');
+      }
+      deferredPrompt = null;
+    });
+  }
+});
