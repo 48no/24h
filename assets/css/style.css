@@ -91,6 +91,21 @@ body{
   flex-direction:column;
   z-index:999;
 }
+.cart-count{
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: red;
+  color: #fff;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
 .cart-panel h4{margin:0 0 10px; color:var(--primary);}
 #cart-items{list-style:none; padding:0; margin:0 0 10px;}
 #cart-items li{display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;}
