@@ -51,27 +51,19 @@ async function init(){
 }
 
 function updateCart(){
-  const ul = $("#cart-items");
-  ul.innerHTML = "";
-
-  const count = $("#cart-count");
-  let totalItems = 0;
-  for(let item in cart) totalItems += cart[item];
-  count.textContent = totalItems;
-
-  if(totalItems === 0){
-    ul.innerHTML = "<li>السلة فارغة</li>";
-    return;
-  }
-
+  const ul=$("#cart-items");
+  ul.innerHTML="";
+  if(Object.keys(cart).length===0){ul.innerHTML="<li>السلة فارغة</li>";return;}
   for(let item in cart){
-    const li = create('li');
-    const name = create('span', null, `${item} x${cart[item]}`);
-    const controls = create('span');
-    const plus = create('button','btn-small','+');
-    plus.onclick = () => { cart[item]++; updateCart(); };
-    const minus = create('button','btn-small','-');
-    minus.onclick = () => { cart[item]--; if(cart[item]<=0) delete cart[item]; updateCart(); };
+    const li=create('li');
+    const name=create('span',null,`${item} x${cart[item]}`);
+    const controls=create('span');
+    const plus=create('button','btn-small','+');
+    plus.onclick=()=>{cart[item]++;updateCart();}
+    const minus=create('button','btn-small','-');
+    minus.onclick=()=>{
+      cart[item]--; if(cart[item]<=0) delete cart[item]; updateCart();
+    };
     controls.appendChild(minus);
     controls.appendChild(plus);
     li.appendChild(name);
@@ -90,10 +82,8 @@ function sendOrder(){
   window.open(link,"_blank");
 }
 
-// Splash Screen
-window.addEventListener("load", () => {
-  const splash = document.getElementById("splash");
-  setTimeout(() => {
-    splash.classList.add("hidden");
-  }, 2000); // 2 ثواني قبل الإخفاء
+window.addEventListener('DOMContentLoaded',init);
+window.addEventListener("load",()=>{
+  const splash=document.getElementById("splash");
+  setTimeout(()=>{splash.classList.add("hidden");},2000);
 });
