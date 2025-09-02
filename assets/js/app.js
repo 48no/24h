@@ -31,88 +31,66 @@ async function init(){
     return;
   }
 
+  // عرض كل المنتجات مباشرة مع زر أضف للسلة
   menu.sections.forEach((sec) => {
     const card = create('div','menu-card');
     const h = create('h3', null, sec.name);
     card.appendChild(h);
 
     const ul = create('ul');
-    sec.items.slice(0,5).forEach(it => {
+    sec.items.forEach(it => {
       const li = create('li', null, it);
+      // زر إضافة للسلة
+      const addBtn = create('button','btn-primary','أضف للسلة');
+      addBtn.style.marginLeft = '8px';
+      addBtn.onclick = () => {
+        if(cart[it]) cart[it]++;
+        else cart[it] = 1;
+        updateCartPanel();
+      };
+      li.appendChild(addBtn);
       ul.appendChild(li);
     });
 
-    if(sec.items.length > 5){
-      const more = create('div','more', 'عرض الكل');
-      more.style.marginTop = '8px';
-      more.style.cursor = 'pointer';
-      more.style.color = 'var(--primary)';
-      more.onclick = () => openModal(sec, cfg);
-      card.appendChild(ul);
-      card.appendChild(more);
-    } else {
-      card.appendChild(ul);
-    }
-
+    card.appendChild(ul);
     container.appendChild(card);
   });
+
+  createCartPanel(); // إنشاء السلة أسفل المنتجات
 }
 
-function openModal(section, cfg){
-  const modal = $("#modal");
-  const panel = modal.querySelector('.panel');
-  panel.innerHTML = '';
+function createCartPanel(){
+  const container = $("#cart-panel");
+  container.classList.add("cart-panel");
 
-  const close = create('div','close','✖ إغلاق');
-  close.onclick = () => closeModal();
-  panel.appendChild(close);
+  // زر واتس في الأعلى يسار
+  const sendBtn = create('button','btn-primary','أرسل الطلب عبر واتس');
+  sendBtn.id = "send-wa-btn";
+  sendBtn.onclick = sendOrder;
 
-  const title = create('h2', null, section.name);
-  panel.appendChild(title);
+  // قائمة المنتجات في السلة
+  const ul = create('ul');
+  ul.id = "cart-items";
 
-  const list = create('div','item-list');
-  section.items.forEach(it => {
-    const item = create('div','item');
-    const name = create('div', null, it);
+  // حقل العنوان
+  const addressInput = create('input', 'cart-address');
+  addressInput.id = "cart-address";
+  addressInput.placeholder = "ضع عنوانك هنا";
 
-    // زر إضافة للسلة
-    const addBtn = create('button','btn-primary','أضف للسلة');
-    addBtn.onclick = () => {
-      if(cart[it]) cart[it]++;
-      else cart[it] = 1;
-      updateCartPanel(cfg);
-    };
+  container.appendChild(sendBtn);
+  container.appendChild(ul);
+  container.appendChild(addressInput);
 
-    item.appendChild(name);
-    item.appendChild(addBtn);
-    list.appendChild(item);
-  });
-  panel.appendChild(list);
-
-  // منطقة السلة + إرسال واتس
-  const cartPanel = create('div','cart-panel');
-  panel.appendChild(cartPanel);
-
-  updateCartPanel(cfg); // تحديث أولي
-
-  modal.style.display = 'flex';
-  setTimeout(()=> modal.classList.add("show"), 10);
+  updateCartPanel();
 }
 
-function updateCartPanel(cfg){
-  const panel = $("#modal").querySelector('.panel');
-  let cartPanel = panel.querySelector('.cart-panel');
-  cartPanel.innerHTML = '';
-  cartPanel.style.borderTop = "1px solid #ccc";
-  cartPanel.style.paddingTop = "12px";
-  cartPanel.style.marginTop = "12px";
-
+function updateCartPanel(){
+  const ul = $("#cart-items");
+  ul.innerHTML = '';
   if(Object.keys(cart).length === 0){
-    cartPanel.textContent = 'السلة فارغة';
+    ul.innerHTML = '<li>السلة فارغة</li>';
     return;
   }
-
-  const ul = create('ul');
   for(let item in cart){
     const li = create('li');
     li.style.display = 'flex';
@@ -124,12 +102,12 @@ function updateCartPanel(cfg){
 
     const controls = create('span');
     const plus = create('button', 'btn-small','+');
-    plus.onclick = () => { cart[item]++; updateCartPanel(cfg); };
+    plus.onclick = () => { cart[item]++; updateCartPanel(); };
     const minus = create('button', 'btn-small','-');
     minus.onclick = () => {
       cart[item]--;
       if(cart[item]<=0) delete cart[item];
-      updateCartPanel(cfg);
+      updateCartPanel();
     };
 
     controls.appendChild(minus);
@@ -138,44 +116,26 @@ function updateCartPanel(cfg){
     li.appendChild(controls);
     ul.appendChild(li);
   }
-  cartPanel.appendChild(ul);
-
-  const sendBtn = create('button','btn-primary','أرسل الطلب عبر واتس');
-  sendBtn.style.marginTop = '10px';
-  sendBtn.onclick = () => {
-    const phoneNumber = "96565006690"; // رقمك
-    let message = "طلب جديد:\n";
-for(let item in cart){
-  message += `${item} x${cart[item]}\n`;
-}
-const location = $("#address") ? $("#address").textContent : '';
-if(location) message += `الموقع: ${location}`;
-
-// استبدال فقط الأحرف الخاصة الضرورية بدل encodeURIComponent كامل
-const link = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message).replace(/%20/g, ' ')}`;
-window.open(link, "_blank");
-    window.open(link, "_blank");
-  };
-  cartPanel.appendChild(sendBtn);
 }
 
-function closeModal(){
-  const modal = $("#modal");
-  modal.classList.remove("show");
-  setTimeout(()=> modal.style.display = 'none', 250);
+function sendOrder(){
+  const phoneNumber = "96565006690";
+  let message = "طلب جديد:\n";
+  for(let item in cart){
+    message += `${item} x${cart[item]}\n`;
+  }
+  const address = $("#cart-address").value.trim();
+  if(address) message += `الموقع: ${address}`;
+  const link = "https://wa.me/" + phoneNumber + "?text=" + encodeURIComponent(message);
+  window.open(link, "_blank");
 }
 
 window.addEventListener('DOMContentLoaded', init);
-
-// إغلاق المودال عند الضغط على الخلفية
-$("#modal").addEventListener("click", e=>{
-  if(e.target.id === "modal"){ closeModal(); }
-});
 
 // Splash Screen control
 window.addEventListener("load", () => {
   const splash = document.getElementById("splash");
   setTimeout(() => {
     splash.classList.add("hidden");
-  }, 2000); // 2 ثواني وتختفي
+  }, 2000);
 });
