@@ -1,80 +1,79 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Leen Coffee</title>
-<link rel="stylesheet" href="assets/css/style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Leen Coffee</title>
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
+  <!-- Splash Screen -->
+  <div id="splash">
+    <img src="assets/img/hero.jpg" alt="Leen Coffee Logo">
+  </div>
 
-<div id="splash">
-  <img src="assets/img/hero.jpg" alt="Leen Coffee Logo">
-</div>
-
-<div class="container">
-  <header class="header">
-    <div class="brand">
-      <div>
-        <h1 id="brandName">Leen Coffee</h1>
-        <div class="tag" id="tagline">
-          دلل نفسك بمذاق القهوة الذي لا يُنسى.<br>
-          Savor every sip and let the aroma inspire you
+  <div class="container">
+    <header class="header">
+      <div class="brand">
+        <div>
+          <h1 id="brandName">Leen Coffee</h1>
+          <div class="tag" id="tagline">
+            دلل نفسك بمذاق القهوة الذي لا يُنسى.<br>
+            Savor every sip and let the aroma inspire you
+          </div>
         </div>
       </div>
-    </div>
-    <nav class="nav">
-      <a href="#menu">المنيو</a>
-      <a id="instagram" class="ig-btn" href="https://www.instagram.com/leen__coffee" target="_blank">طلب عبر إنستقرام</a>
-    </nav>
-  </header>
+      <nav class="nav">
+        <a href="#menu">المنيو</a>
+        <a id="instagram" class="ig-btn" href="https://www.instagram.com/leen__coffee" target="_blank">طلب عبر إنستقرام</a>
+      </nav>
+    </header>
 
-  <section class="hero">
-    <div class="hero-left">
-      <h2>Leen Coffee — قهوة بجودة عالية ومشروبات طازجة</h2>
-      <p class="tag">
-        دلل نفسك بمذاق القهوة الذي لا يُنسى.<br>
-        Savor every sip and let the aroma inspire you 
-      </p>
-      <div class="cta">
-        <a class="btn-primary" href="https://www.instagram.com/leen__coffee" target="_blank">اطلب عبر الإنستقرام</a>
+    <section class="hero">
+      <div class="hero-left">
+        <h2>Leen Coffee — قهوة بجودة عالية ومشروبات طازجة</h2>
+        <p class="tag">
+          دلل نفسك بمذاق القهوة الذي لا يُنسى.<br>
+          Savor every sip and let the aroma inspire you 
+        </p>
+        <div class="cta">
+          <a class="btn-primary" href="https://www.instagram.com/leen__coffee" target="_blank">اطلب عبر الإنستقرام</a>
+        </div>
+
+        <div class="info-cards">
+          <div class="card"><h4>📍 الموقع</h4><div id="address">Dara'a, Al Hirak</div></div>
+          <div class="card"><h4>⏰ أوقات العمل</h4><div id="hours">Daily 9:30 AM - 12:00 AM</div></div>
+        </div>
       </div>
-      <div class="info-cards">
-        <div class="card"><h4>📍 الموقع</h4><div id="address">Dara'a, Al Hirak</div></div>
-        <div class="card"><h4>⏰ أوقات العمل</h4><div id="hours">Daily 9:30 AM - 12:00 AM</div></div>
+      <div class="hero-right">
+        <img id="hero-img" src="assets/img/hero.jpg" alt="Hero">
       </div>
-    </div>
-    <div class="hero-right">
-      <img id="hero-img" src="assets/img/hero.jpg" alt="Hero">
-    </div>
-  </section>
+    </section>
 
-  <section id="menu" class="menu-section">
-    <h3 style="color:var(--primary)">قائمة المشروبات</h3>
-    <div id="menu-grid" class="menu-grid"></div>
-  </section>
+    <section id="menu" class="menu-section">
+      <h3 style="color:var(--primary)">قائمة المشروبات</h3>
+      <div id="menu-grid" class="menu-grid"></div>
+    </section>
 
-  <footer class="footer">
-    <div>© 2025 Leen Coffee</div>
-    <div class="social">
-      <a class="ig-btn" href="https://www.instagram.com/leen__coffee" target="_blank">Instagram</a>
-    </div>
-  </footer>
-</div>
+    <footer class="footer">
+      <div>© 2025 Leen Coffee</div>
+      <div class="social">
+        <a class="ig-btn" href="https://www.instagram.com/leen__coffee" target="_blank">Instagram</a>
+      </div>
+    </footer>
+  </div>
 
-<!-- زر السلة العائم -->
-<div id="cart-button" class="cart-button">
-  🛒 <span id="cart-count" class="cart-count">0</span>
-</div>
+  <!-- زر السلة العائم -->
+  <div id="cart-button" class="cart-button">🛒</div>
 
-<!-- لوحة السلة العائمة -->
-<div id="cart-panel" class="cart-panel">
-  <h4>سلتك</h4>
-  <ul id="cart-items"></ul>
-  <input type="text" id="cart-address" class="cart-address" placeholder="ضع عنوانك هنا">
-  <button id="send-wa-btn" class="btn-primary">أرسل الطلب عبر واتس</button>
-</div>
+  <!-- لوحة السلة -->
+  <div id="cart-panel" class="cart-panel">
+    <h4>سلتك</h4>
+    <ul id="cart-items"></ul>
+    <input type="text" id="cart-address" class="cart-address" placeholder="ضع عنوانك هنا">
+    <button id="send-wa-btn" class="btn-primary">أرسل الطلب عبر واتس</button>
+  </div>
 
-<script src="assets/js/app.js"></script>
+  <script src="assets/js/app.js"></script>
 </body>
 </html>
