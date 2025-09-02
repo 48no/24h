@@ -90,7 +90,7 @@ function openModal(section){
   note.style.color = 'var(--muted)';
 
   const qr = create('div','qr');
-  qr.innerHTML = '<img src="assets/img/hero.jpg" alt="QR" style="width:100%;height:100%;object-fit:cover;border-radius:8px">';
+  qr.innerHTML = '<img src="assets/img/hero.jpg" alt="QR">';
 
   row.appendChild(note);
   row.appendChild(qr);
@@ -111,4 +111,12 @@ window.addEventListener('DOMContentLoaded', init);
 // إغلاق المودال عند الضغط على الخلفية
 $("#modal").addEventListener("click", e=>{
   if(e.target.id === "modal"){ closeModal(); }
+});
+
+// Splash Screen control
+window.addEventListener("load", () => {
+  const splash = document.getElementById("splash");
+  setTimeout(() => {
+    splash.classList.add("hidden");
+  }, 2000); // 2 ثواني وتختفي
 });
