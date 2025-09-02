@@ -51,32 +51,10 @@ body{
 }
 
 /* Splash Screen */
-#splash {
-  position: fixed;
-  top:0; left:0; right:0; bottom:0;
-  background: #000;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:9999;
-  transition: opacity 0.8s ease, visibility 0.8s ease;
-}
-#splash img {
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  object-fit: cover;
-  animation: splashZoom 1.5s ease;
-  box-shadow: 0 0 40px rgba(255,215,0,0.3);
-}
-#splash.hidden {
-  opacity: 0;
-  visibility: hidden;
-}
-@keyframes splashZoom {
-  from {transform: scale(0.6); opacity:0;}
-  to {transform: scale(1); opacity:1;}
-}
+#splash {position: fixed; top:0; left:0; right:0; bottom:0; background: #000; display:flex; align-items:center; justify-content:center; z-index:9999; transition: opacity 0.8s ease, visibility 0.8s ease;}
+#splash img {width: 160px; height: 160px; border-radius: 50%; object-fit: cover; animation: splashZoom 1.5s ease; box-shadow: 0 0 40px rgba(255,215,0,0.3);}
+#splash.hidden {opacity:0; visibility:hidden;}
+@keyframes splashZoom {from {transform: scale(0.6); opacity:0;} to {transform: scale(1); opacity:1;}}
 
 /* زر السلة العائم */
 .cart-button{
@@ -112,21 +90,6 @@ body{
   display:none;
   flex-direction:column;
   z-index:999;
-}
-.cart-count{
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  background: red;
-  color: #fff;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
 }
 .cart-panel h4{margin:0 0 10px; color:var(--primary);}
 #cart-items{list-style:none; padding:0; margin:0 0 10px;}
