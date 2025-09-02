@@ -32,9 +32,12 @@ async function init(){
     card.appendChild(h);
     const ul=create('ul');
     sec.items.forEach(it=>{
-      const li=create('li',null,it);
-      const addBtn=create('button','btn-primary','أضف للسلة');
-      addBtn.onclick=()=>{cart[it]?cart[it]++:cart[it]=1;updateCart();}
+      const li=create('li');
+      const name=create('span',null,it);
+      const addBtn=create('button','btn-add-cart');
+      addBtn.innerHTML = `أضف للسلة <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 1a1 1 0 0 1 1-1h1.27a1 1 0 0 1 .95.68L3.89 2H14a1 1 0 0 1 .95 1.32l-1.5 6A1 1 0 0 1 12.5 10H4a1 1 0 0 1-.95-.68L1.61 2.24 1.11 1H1a1 1 0 0 1-1-1zm3.14 3 1.25 5h7.71l1.25-5H3.14zM5 12a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm6 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/></svg>`;
+      addBtn.onclick = ()=>{cart[it]?cart[it]++:cart[it]=1;updateCart();}
+      li.appendChild(name);
       li.appendChild(addBtn);
       ul.appendChild(li);
     });
@@ -52,8 +55,13 @@ async function init(){
 
 function updateCart(){
   const ul=$("#cart-items");
+  const count=$("#cart-count");
+  let totalItems=0;
+  for(let item in cart) totalItems+=cart[item];
+  count.textContent = totalItems;
+
   ul.innerHTML="";
-  if(Object.keys(cart).length===0){ul.innerHTML="<li>السلة فارغة</li>";return;}
+  if(totalItems===0){ul.innerHTML="<li>السلة فارغة</li>";return;}
   for(let item in cart){
     const li=create('li');
     const name=create('span',null,`${item} x${cart[item]}`);
@@ -82,6 +90,7 @@ function sendOrder(){
   window.open(link,"_blank");
 }
 
+// Splash Screen
 window.addEventListener('DOMContentLoaded',init);
 window.addEventListener("load",()=>{
   const splash=document.getElementById("splash");
