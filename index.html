@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Leen Coffee</title>
   <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#FFD700">
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
 </head>
 <body>
   <!-- Splash Screen -->
@@ -27,6 +31,7 @@
         <a href="#menu">المنيو</a>
         <a id="instagram" class="ig-btn" href="https://www.instagram.com/leen__coffee" target="_blank">طلب عبر إنستقرام</a>
       </nav>
+      <button id="btn-install" class="btn-ghost" style="display:none;">تثبيت التطبيق</button>
     </header>
 
     <section class="hero">
@@ -64,7 +69,9 @@
   </div>
 
   <!-- زر السلة العائم -->
-  <div id="cart-button" class="cart-button">🛒 <span id="cart-count" class="cart-count">0</span></div>
+  <div id="cart-button" class="cart-button">
+    🛒 <span id="cart-count" class="cart-count">0</span>
+  </div>
 
   <!-- لوحة السلة -->
   <div id="cart-panel" class="cart-panel">
