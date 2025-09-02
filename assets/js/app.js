@@ -1,3 +1,5 @@
+let cart = []; // السلة
+
 async function fetchJSON(path){
   const r = await fetch(path);
   return await r.json();
@@ -45,7 +47,7 @@ async function init(){
       more.style.marginTop = '8px';
       more.style.cursor = 'pointer';
       more.style.color = 'var(--primary)';
-      more.onclick = () => openModal(sec);
+      more.onclick = () => openModal(sec, cfg);
       card.appendChild(ul);
       card.appendChild(more);
     } else {
@@ -56,7 +58,7 @@ async function init(){
   });
 }
 
-function openModal(section){
+function openModal(section, cfg){
   const modal = $("#modal");
   const panel = modal.querySelector('.panel');
   panel.innerHTML = '';
@@ -72,32 +74,63 @@ function openModal(section){
   section.items.forEach(it => {
     const item = create('div','item');
     const name = create('div', null, it);
-    const order = create('a', 'btn-primary', 'اطلب عبر إنستقرام');
-    order.href = $("#instagram").href;
-    order.target = '_blank';
+
+    // زر إضافة للسلة
+    const addBtn = create('button','btn-primary','أضف للسلة');
+    addBtn.onclick = () => {
+      cart.push(it);
+      updateCartPanel(cfg);
+    };
+
     item.appendChild(name);
-    item.appendChild(order);
+    item.appendChild(addBtn);
     list.appendChild(item);
   });
   panel.appendChild(list);
 
-  const row = create('div', null);
-  row.style.display = 'flex';
-  row.style.justifyContent = 'space-between';
-  row.style.marginTop = '12px';
+  // منطقة السلة + إرسال واتس
+  const cartPanel = create('div','cart-panel');
+  panel.appendChild(cartPanel);
 
-  const note = create('div', null, 'اطلب عبر حساب الإنستقرام أو امسح QR');
-  note.style.color = 'var(--muted)';
-
-  const qr = create('div','qr');
-  qr.innerHTML = '<img src="assets/img/hero.jpg" alt="QR">';
-
-  row.appendChild(note);
-  row.appendChild(qr);
-  panel.appendChild(row);
+  updateCartPanel(cfg); // تحديث أولي
 
   modal.style.display = 'flex';
   setTimeout(()=> modal.classList.add("show"), 10);
+}
+
+function updateCartPanel(cfg){
+  const panel = $("#modal").querySelector('.panel');
+  let cartPanel = panel.querySelector('.cart-panel');
+  cartPanel.innerHTML = '';
+
+  if(cart.length === 0){
+    cartPanel.textContent = 'السلة فارغة';
+    return;
+  }
+
+  const ul = create('ul');
+  cart.forEach(item => {
+    const li = create('li', null, item);
+    ul.appendChild(li);
+  });
+  cartPanel.appendChild(ul);
+
+  const sendBtn = create('button','btn-primary','أرسل الطلب عبر واتس');
+  sendBtn.onclick = () => {
+    const phoneNumber = "96565006690"; // رقمك
+    let message = "طلب جديد:%0A";
+    cart.forEach(it => {
+      message += `${it}%0A`;
+    });
+    // إضافة الموقع من الصفحة
+    const location = $("#address") ? $("#address").textContent : '';
+    if(location) message += `الموقع: ${location}`;
+
+    const encoded = encodeURIComponent(message);
+    const link = `https://wa.me/${phoneNumber}?text=${encoded}`;
+    window.open(link, "_blank");
+  };
+  cartPanel.appendChild(sendBtn);
 }
 
 function closeModal(){
