@@ -53,9 +53,6 @@
     <section id="menu" class="menu-section">
       <h3 style="color:var(--primary)">قائمة المشروبات</h3>
       <div id="menu-grid" class="menu-grid"></div>
-
-      <!-- سلة الطلبات -->
-      <div id="cart-panel"></div>
     </section>
 
     <footer class="footer">
@@ -64,6 +61,17 @@
         <a class="ig-btn" href="https://www.instagram.com/leen__coffee" target="_blank">Instagram</a>
       </div>
     </footer>
+  </div>
+
+  <!-- زر السلة العائم -->
+  <div id="cart-button" class="cart-button">🛒</div>
+
+  <!-- لوحة السلة -->
+  <div id="cart-panel" class="cart-panel">
+    <h4>سلتك</h4>
+    <ul id="cart-items"></ul>
+    <input type="text" id="cart-address" class="cart-address" placeholder="ضع عنوانك هنا">
+    <button id="send-wa-btn" class="btn-primary">أرسل الطلب عبر واتس</button>
   </div>
 
   <script src="assets/js/app.js"></script>
