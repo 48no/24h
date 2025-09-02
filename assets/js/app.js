@@ -91,8 +91,9 @@ function sendOrder(){
   window.open(link,"_blank");
 }
 
-window.addEventListener('DOMContentLoaded',init);
-window.addEventListener("load",()=>{
-  const splash=document.getElementById("splash");
-  setTimeout(()=>{splash.classList.add("hidden");},2000);
+window.addEventListener("load", () => {
+  const splash = document.getElementById("splash");
+  setTimeout(() => {
+    splash.classList.add("hidden");
+  }, 2000); // 2 ثواني قبل الإخفاء
 });
