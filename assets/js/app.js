@@ -51,25 +51,34 @@ async function init(){
 }
 
 function updateCart(){
-  const ul=$("#cart-items");
-  ul.innerHTML="";
-  if(Object.keys(cart).length===0){ul.innerHTML="<li>السلة فارغة</li>";return;}
+  const ul = $("#cart-items");
+  ul.innerHTML = "";
+
+  const count = $("#cart-count");
+  let totalItems = 0;
+  for(let item in cart) totalItems += cart[item];
+  count.textContent = totalItems;
+
+  if(totalItems === 0){
+    ul.innerHTML = "<li>السلة فارغة</li>";
+    return;
+  }
+
   for(let item in cart){
-    const li=create('li');
-    const name=create('span',null,`${item} x${cart[item]}`);
-    const controls=create('span');
-    const plus=create('button','btn-small','+');
-    plus.onclick=()=>{cart[item]++;updateCart();}
-    const minus=create('button','btn-small','-');
-    minus.onclick=()=>{
-      cart[item]--; if(cart[item]<=0) delete cart[item]; updateCart();
-    };
+    const li = create('li');
+    const name = create('span', null, `${item} x${cart[item]}`);
+    const controls = create('span');
+    const plus = create('button','btn-small','+');
+    plus.onclick = () => { cart[item]++; updateCart(); };
+    const minus = create('button','btn-small','-');
+    minus.onclick = () => { cart[item]--; if(cart[item]<=0) delete cart[item]; updateCart(); };
     controls.appendChild(minus);
     controls.appendChild(plus);
     li.appendChild(name);
     li.appendChild(controls);
     ul.appendChild(li);
   }
+}
 }
 
 function sendOrder(){
