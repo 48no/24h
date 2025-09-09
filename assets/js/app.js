@@ -12,26 +12,6 @@ function create(tag, cls, txt){
   return el;
 }
 
-// --- iOS / PWA Detection ---
-function isiOS() {
-  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-}
-function isInStandaloneMode() {
-  return (window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true;
-}
-
-window.addEventListener('DOMContentLoaded', () => {
-  const iosBanner = document.getElementById('ios-banner');
-
-  // إذا iOS ولم يتم تشغيل الموقع من التطبيق → أظهر الـ banner
-  if(isiOS() && !isInStandaloneMode()) {
-    iosBanner.style.display = 'block';
-  }
-
-  // شغّل الموقع بعد ذلك سواء iOS أو Android
-  init();
-});
-
 async function init(){
   const cfg = await fetchJSON('data/config.json');
   document.title = cfg.brandName + ' — قهوة';
