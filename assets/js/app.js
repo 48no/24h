@@ -22,6 +22,7 @@ async function init(){
   $("#instagram").href = cfg.instagram;
   $("#instagram").textContent = 'اطلب عبر الإنستقرام';
 
+  // المنيو
   const menu = await fetchJSON('data/menu.json');
   const container = $("#menu-grid");
   container.innerHTML = '';
@@ -47,6 +48,25 @@ async function init(){
     });
     card.appendChild(ul);
     container.appendChild(card);
+  });
+
+  // الأسئلة الشائعة
+  const faqData = await fetchJSON('data/faq.json');
+  const faqContainer = $("#faq-container");
+  faqContainer.innerHTML = "";
+  faqData.questions.forEach(q=>{
+    const item = create("div","faq-item");
+    const question = create("div","faq-question",q.q);
+    const answer = create("div","faq-answer",q.a);
+
+    // إظهار/إخفاء
+    question.onclick = ()=>{
+      answer.classList.toggle("open");
+    };
+
+    item.appendChild(question);
+    item.appendChild(answer);
+    faqContainer.appendChild(item);
   });
 
   // أحداث السلة
@@ -114,12 +134,10 @@ if ('serviceWorker' in navigator) {
     try {
       const reg = await navigator.serviceWorker.register('/service-worker.js');
       console.log('SW registered', reg);
-      // optional: prompt update flow
       reg.addEventListener('updatefound', () => {
         const newWorker = reg.installing;
         newWorker.addEventListener('statechange', () => {
           if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-            // new content available
             showToast('نسخة جديدة متاحة. أعد تحميل الصفحة لتحديث.');
           }
         });
