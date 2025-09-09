@@ -12,6 +12,26 @@ function create(tag, cls, txt){
   return el;
 }
 
+// --- iOS / PWA Detection ---
+function isiOS() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+}
+function isInStandaloneMode() {
+  return (window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true;
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const iosBanner = document.getElementById('ios-banner');
+
+  // إذا iOS ولم يتم تشغيل الموقع من التطبيق → أظهر الـ banner
+  if(isiOS() && !isInStandaloneMode()) {
+    iosBanner.style.display = 'block';
+  }
+
+  // شغّل الموقع بعد ذلك سواء iOS أو Android
+  init();
+});
+
 async function init(){
   const cfg = await fetchJSON('data/config.json');
   document.title = cfg.brandName + ' — قهوة';
@@ -59,7 +79,6 @@ async function init(){
     const question = create("div","faq-question",q.q);
     const answer = create("div","faq-answer",q.a);
 
-    // إظهار/إخفاء
     question.onclick = ()=>{
       answer.classList.toggle("open");
     };
@@ -89,12 +108,14 @@ function updateCart(){
   for(let item in cart){
     const li=create('li');
     const name=create('span',null,`${item} x${cart[item]}`);
-    const controls=create('span');
+        const controls=create('span');
     const plus=create('button','btn-small','+');
-    plus.onclick=()=>{cart[item]++;updateCart();}
+    plus.onclick=()=>{cart[item]++; updateCart();}
     const minus=create('button','btn-small','-');
     minus.onclick=()=>{
-      cart[item]--; if(cart[item]<=0) delete cart[item]; updateCart();
+      cart[item]--; 
+      if(cart[item]<=0) delete cart[item]; 
+      updateCart();
     };
     controls.appendChild(minus);
     controls.appendChild(plus);
@@ -106,10 +127,25 @@ function updateCart(){
 
 function sendOrder(){
   const phoneNumber="96565006690";
+  const address=$("#cart-address").value.trim();
+
+  // تحقق إذا السلة فارغة
+  if(Object.keys(cart).length === 0){
+    showToast("السلة فارغة! أضف بعض المنتجات أولاً ❌");
+    return;
+  }
+
+  // تحقق إذا العنوان فارغ
+  if(!address){
+    showToast("يجب إدخال العنوان لإرسال الطلب 📍");
+    return;
+  }
+
+  // إنشاء الرسالة
   let message="طلب جديد:\n";
   for(let item in cart) message+=`${item} x${cart[item]}\n`;
-  const address=$("#cart-address").value.trim();
-  if(address) message+=`الموقع: ${address}`;
+  message += `الموقع: ${address}`;
+
   const link="https://wa.me/"+phoneNumber+"?text="+encodeURIComponent(message);
   window.open(link,"_blank");
 }
@@ -123,11 +159,11 @@ function showToast(msg="تمت الإضافة للسلة ✅") {
 }
 
 // Splash Screen
-window.addEventListener('DOMContentLoaded',init);
 window.addEventListener("load",()=>{
   const splash=document.getElementById("splash");
   setTimeout(()=>{splash.classList.add("hidden");},2000);
 });
+
 // --- PWA: register service worker ---
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', async () => {
@@ -154,7 +190,7 @@ const installBtn = document.getElementById('btn-install');
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  if (installBtn) {
+  if(installBtn) {
     installBtn.style.display = 'inline-block';
     installBtn.addEventListener('click', async () => {
       installBtn.style.display = 'none';
