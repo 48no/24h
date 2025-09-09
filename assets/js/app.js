@@ -105,11 +105,26 @@ function updateCart(){
 }
 
 function sendOrder(){
-  const phoneNumber="96565006690";
+  const phoneNumber="963998411476";
+  const address=$("#cart-address").value.trim();
+
+  // تحقق إذا السلة فارغة
+  if(Object.keys(cart).length === 0){
+    showToast("السلة فارغة! أضف بعض المنتجات أولاً ❌");
+    return;
+  }
+
+  // تحقق إذا العنوان فارغ
+  if(!address){
+    showToast("يجب إدخال العنوان لإرسال الطلب 📍");
+    return;
+  }
+
+  // إنشاء الرسالة
   let message="طلب جديد:\n";
   for(let item in cart) message+=`${item} x${cart[item]}\n`;
-  const address=$("#cart-address").value.trim();
-  if(address) message+=`الموقع: ${address}`;
+  message += `الموقع: ${address}`;
+
   const link="https://wa.me/"+phoneNumber+"?text="+encodeURIComponent(message);
   window.open(link,"_blank");
 }
