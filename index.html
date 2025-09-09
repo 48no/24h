@@ -32,6 +32,7 @@
         <a href="#faq">الأسئلة الشائعة</a>
         <a id="instagram" class="ig-btn" href="https://www.instagram.com/leen__coffee" target="_blank">طلب عبر إنستقرام</a>
       </nav>
+      <button id="btn-install" class="btn-ghost" style="display:none;">تثبيت التطبيق</button>
     </header>
 
     <!-- Hero -->
@@ -45,10 +46,14 @@
         <div class="cta">
           <a class="btn-primary" href="https://www.instagram.com/leen__coffee" target="_blank">اطلب عبر الإنستقرام</a>
         </div>
+
         <div class="info-cards">
           <div class="card"><h4>📍 الموقع</h4><div id="address">Dara'a, Al Hirak</div></div>
           <div class="card"><h4>⏰ أوقات العمل</h4><div id="hours">Daily 9:30 AM - 12:00 AM</div></div>
         </div>
+      </div>
+      <div class="hero-right">
+        <img id="hero-img" src="assets/img/hero.jpg" alt="Hero">
       </div>
     </section>
 
@@ -61,7 +66,9 @@
     <!-- FAQ -->
     <section id="faq" class="faq-section">
       <h3 style="color:var(--primary)">الأسئلة الشائعة</h3>
-      <div id="faq-container" class="faq-container"></div>
+      <div id="faq-container" class="faq-container">
+        <!-- الأسئلة ستُضاف ديناميكياً من faq.json -->
+      </div>
     </section>
 
     <!-- Footer -->
@@ -72,6 +79,22 @@
       </div>
     </footer>
   </div>
+
+  <!-- زر السلة العائم -->
+  <div id="cart-button" class="cart-button">
+    🛒 <span id="cart-count" class="cart-count">0</span>
+  </div>
+
+  <!-- لوحة السلة -->
+  <div id="cart-panel" class="cart-panel">
+    <h4>سلتك</h4>
+    <ul id="cart-items"></ul>
+    <input type="text" id="cart-address" class="cart-address" placeholder="ضع عنوانك هنا">
+    <button id="send-wa-btn" class="btn-primary">أرسل الطلب عبر واتس</button>
+  </div>
+
+  <!-- Toast إشعار -->
+  <div id="toast" class="toast">تمت الإضافة للسلة ✅</div>
 
   <script src="assets/js/app.js"></script>
 </body>
