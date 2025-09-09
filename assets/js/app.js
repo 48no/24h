@@ -126,7 +126,7 @@ function updateCart(){
 }
 
 function sendOrder(){
-  const phoneNumber="96565006690";
+  const phoneNumber="963998411476";
   const address=$("#cart-address").value.trim();
 
   // تحقق إذا السلة فارغة
