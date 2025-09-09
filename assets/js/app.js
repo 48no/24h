@@ -104,29 +104,14 @@ function updateCart(){
   }
 }
 
-‏function sendOrder(){
-‏  const phoneNumber="963998411476";
-‏  const address=$("#cart-address").value.trim();
-
-  // تحقق إذا السلة فارغة
-‏  if(Object.keys(cart).length === 0){
-‏    showToast("السلة فارغة! أضف بعض المنتجات أولاً ❌");
-‏    return;
-  }
-
-  // تحقق إذا العنوان فارغ
-‏  if(!address){
-‏    showToast("يجب إدخال العنوان لإرسال الطلب 📍");
-‏    return;
-  }
-
-  // إنشاء الرسالة
-‏  let message="طلب جديد:\n";
-‏  for(let item in cart) message+=`${item} x${cart[item]}\n`;
-‏  message += `الموقع: ${address}`;
-
-‏  const link="https://wa.me/"+phoneNumber+"?text="+encodeURIComponent(message);
-‏  window.open(link,"_blank");
+function sendOrder(){
+  const phoneNumber="96565006690";
+  let message="طلب جديد:\n";
+  for(let item in cart) message+=`${item} x${cart[item]}\n`;
+  const address=$("#cart-address").value.trim();
+  if(address) message+=`الموقع: ${address}`;
+  const link="https://wa.me/"+phoneNumber+"?text="+encodeURIComponent(message);
+  window.open(link,"_blank");
 }
 
 // Toast function
@@ -149,12 +134,10 @@ if ('serviceWorker' in navigator) {
     try {
       const reg = await navigator.serviceWorker.register('/service-worker.js');
       console.log('SW registered', reg);
-      // optional: prompt update flow
       reg.addEventListener('updatefound', () => {
         const newWorker = reg.installing;
         newWorker.addEventListener('statechange', () => {
           if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-            // new content available
             showToast('نسخة جديدة متاحة. أعد تحميل الصفحة لتحديث.');
           }
         });
