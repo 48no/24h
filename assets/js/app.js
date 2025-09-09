@@ -59,6 +59,7 @@ async function init(){
     const question = create("div","faq-question",q.q);
     const answer = create("div","faq-answer",q.a);
 
+    // إظهار/إخفاء
     question.onclick = ()=>{
       answer.classList.toggle("open");
     };
@@ -88,14 +89,12 @@ function updateCart(){
   for(let item in cart){
     const li=create('li');
     const name=create('span',null,`${item} x${cart[item]}`);
-        const controls=create('span');
+    const controls=create('span');
     const plus=create('button','btn-small','+');
-    plus.onclick=()=>{cart[item]++; updateCart();}
+    plus.onclick=()=>{cart[item]++;updateCart();}
     const minus=create('button','btn-small','-');
     minus.onclick=()=>{
-      cart[item]--; 
-      if(cart[item]<=0) delete cart[item]; 
-      updateCart();
+      cart[item]--; if(cart[item]<=0) delete cart[item]; updateCart();
     };
     controls.appendChild(minus);
     controls.appendChild(plus);
@@ -105,29 +104,29 @@ function updateCart(){
   }
 }
 
-function sendOrder(){
-  const phoneNumber="963998411476";
-  const address=$("#cart-address").value.trim();
+‏function sendOrder(){
+‏  const phoneNumber="963998411476";
+‏  const address=$("#cart-address").value.trim();
 
   // تحقق إذا السلة فارغة
-  if(Object.keys(cart).length === 0){
-    showToast("السلة فارغة! أضف بعض المنتجات أولاً ❌");
-    return;
+‏  if(Object.keys(cart).length === 0){
+‏    showToast("السلة فارغة! أضف بعض المنتجات أولاً ❌");
+‏    return;
   }
 
   // تحقق إذا العنوان فارغ
-  if(!address){
-    showToast("يجب إدخال العنوان لإرسال الطلب 📍");
-    return;
+‏  if(!address){
+‏    showToast("يجب إدخال العنوان لإرسال الطلب 📍");
+‏    return;
   }
 
   // إنشاء الرسالة
-  let message="طلب جديد:\n";
-  for(let item in cart) message+=`${item} x${cart[item]}\n`;
-  message += `الموقع: ${address}`;
+‏  let message="طلب جديد:\n";
+‏  for(let item in cart) message+=`${item} x${cart[item]}\n`;
+‏  message += `الموقع: ${address}`;
 
-  const link="https://wa.me/"+phoneNumber+"?text="+encodeURIComponent(message);
-  window.open(link,"_blank");
+‏  const link="https://wa.me/"+phoneNumber+"?text="+encodeURIComponent(message);
+‏  window.open(link,"_blank");
 }
 
 // Toast function
@@ -139,21 +138,23 @@ function showToast(msg="تمت الإضافة للسلة ✅") {
 }
 
 // Splash Screen
+window.addEventListener('DOMContentLoaded',init);
 window.addEventListener("load",()=>{
   const splash=document.getElementById("splash");
   setTimeout(()=>{splash.classList.add("hidden");},2000);
 });
-
 // --- PWA: register service worker ---
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', async () => {
     try {
       const reg = await navigator.serviceWorker.register('/service-worker.js');
       console.log('SW registered', reg);
+      // optional: prompt update flow
       reg.addEventListener('updatefound', () => {
         const newWorker = reg.installing;
         newWorker.addEventListener('statechange', () => {
           if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            // new content available
             showToast('نسخة جديدة متاحة. أعد تحميل الصفحة لتحديث.');
           }
         });
@@ -170,7 +171,7 @@ const installBtn = document.getElementById('btn-install');
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  if(installBtn) {
+  if (installBtn) {
     installBtn.style.display = 'inline-block';
     installBtn.addEventListener('click', async () => {
       installBtn.style.display = 'none';
