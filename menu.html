@@ -120,73 +120,90 @@
     <div id="menu-grid" class="menu-grid"></div>
   </div>
 
-  <script>
-    async function fetchJSON(path){
-      const r = await fetch(path);
-      return await r.json();
-    }
-    function create(tag, cls, txt){
-      const el = document.createElement(tag);
-      if(cls) el.className = cls;
-      if(txt) el.textContent = txt;
-      return el;
-    }
+<script>
+async function fetchJSON(path){
+  const r = await fetch(path);
+  return await r.json();
+}
 
-    let menuData = [];
+function create(tag, cls, txt){
+  const el = document.createElement(tag);
+  if(cls) el.className = cls;
+  if(txt) el.textContent = txt;
+  return el;
+}
 
-    async function initMenu() {
-      menuData = await fetchJSON('data/menu.json');
+let menuData = [];
 
-      // إنشاء أزرار الفلاتر
-      const filterBar = document.getElementById('filter-bar');
-      filterBar.innerHTML = '';
-      const allBtn = create('button','filter-btn active','الكل');
-      allBtn.onclick = () => { filterMenu(''); setActiveBtn(allBtn); };
-      filterBar.appendChild(allBtn);
+async function initMenu() {
+  menuData = await fetchJSON('data/menu.json');
 
-      menuData.sections.forEach(sec => {
-        const btn = create('button','filter-btn',sec.name);
-        btn.onclick = () => { filterMenu(sec.name); setActiveBtn(btn); };
-        filterBar.appendChild(btn);
-      });
+  // إنشاء أزرار الفلاتر
+  const filterBar = document.getElementById('filter-bar');
+  filterBar.innerHTML = '';
+  const allBtn = create('button','filter-btn active','الكل');
+  allBtn.onclick = () => { filterMenu(''); setActiveBtn(allBtn); };
+  filterBar.appendChild(allBtn);
 
-      renderMenu(menuData.sections);
-    }
+  menuData.sections.forEach(sec => {
+    const btn = create('button','filter-btn',sec.name);
+    btn.onclick = () => { filterMenu(sec.name); setActiveBtn(btn); };
+    filterBar.appendChild(btn);
+  });
 
-    function setActiveBtn(btn){
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-    }
+  renderMenu(menuData.sections);
+}
 
-    function filterMenu(sectionName){
-      if(!sectionName) {
-        renderMenu(menuData.sections);
-      } else {
-        const filtered = menuData.sections.filter(sec => sec.name === sectionName);
-        renderMenu(filtered);
+function setActiveBtn(btn){
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function filterMenu(sectionName){
+  if(!sectionName) {
+    renderMenu(menuData.sections);
+  } else {
+    const filtered = menuData.sections.filter(sec => sec.name === sectionName);
+    renderMenu(filtered);
+  }
+}
+
+function renderMenu(sections){
+  const container = document.getElementById('menu-grid');
+  container.innerHTML = '';
+
+  sections.forEach(section => {
+    const card = create('div','menu-card');
+    const h3 = create('h3', null, section.name);
+    card.appendChild(h3);
+
+    const ul = create('ul');
+
+    section.items.forEach(item => {
+      const li = create('li');
+
+      // إضافة الصورة إذا موجودة
+      if(item.image){
+        const img = document.createElement('img');
+        img.src = item.image;
+        img.alt = item.name;
+        img.className = 'menu-thumb';
+        li.appendChild(img);
       }
-    }
 
-    function renderMenu(sections){
-      const container = document.getElementById('menu-grid');
-      container.innerHTML = '';
-      sections.forEach(section => {
-        const card = create('div','menu-card');
-        const h3 = create('h3',null, section.name);
-        card.appendChild(h3);
+      // اسم المشروب
+      const span = create('span', null, item.name);
+      li.appendChild(span);
 
-        const ul = create('ul');
-        section.items.forEach(item => {
-          const li = create('li', null, item);
-          ul.appendChild(li);
-        });
-        card.appendChild(ul);
+      ul.appendChild(li);
+    });
 
-        container.appendChild(card);
-      });
-    }
+    card.appendChild(ul);
+    container.appendChild(card);
+  });
+}
 
-    window.addEventListener('DOMContentLoaded', initMenu);
-  </script>
+window.addEventListener('DOMContentLoaded', initMenu);
+</script>
 </body>
 </html>
