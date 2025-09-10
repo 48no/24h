@@ -1,5 +1,6 @@
 let cart = {};
 
+// ⚡ دوال مساعدة
 async function fetchJSON(path){
   const r = await fetch(path);
   return await r.json();
@@ -12,7 +13,9 @@ function create(tag, cls, txt){
   return el;
 }
 
+// ⚡ التهيئة
 async function init(){
+  // ⚡ تحميل الإعدادات
   const cfg = await fetchJSON('data/config.json');
   document.title = cfg.brandName + ' — قهوة';
   $("#brandName").textContent = cfg.brandName;
@@ -22,7 +25,7 @@ async function init(){
   $("#instagram").href = cfg.instagram;
   $("#instagram").textContent = 'اطلب عبر الإنستقرام';
 
-  // المنيو
+  // ⚡ المنيو
   const menu = await fetchJSON('data/menu.json');
   const container = $("#menu-grid");
   container.innerHTML = '';
@@ -36,7 +39,7 @@ async function init(){
     sec.items.forEach(it=>{
       const li = create('li');
 
-      // عنصر صورة صغير
+      // صورة صغيرة
       if(it.img){
         const img = document.createElement("img");
         img.src = it.img;
@@ -50,7 +53,7 @@ async function init(){
       const name = create('span','',it.name);
       li.appendChild(name);
 
-      // زر الإضافة
+      // زر الإضافة للسلة
       const addBtn = create('button','btn-add-cart');
       addBtn.innerHTML = `أضف للسلة 🛒`;
       addBtn.onclick = ()=>{
@@ -67,7 +70,7 @@ async function init(){
     container.appendChild(card);
   });
 
-  // الأسئلة الشائعة
+  // ⚡ الأسئلة الشائعة
   const faqData = await fetchJSON('data/faq.json');
   const faqContainer = $("#faq-container");
   faqContainer.innerHTML = "";
@@ -85,14 +88,18 @@ async function init(){
     faqContainer.appendChild(item);
   });
 
-  // أحداث السلة
+  // ⚡ أحداث السلة
   const cartBtn = $("#cart-button");
   const cartPanel = $("#cart-panel");
-  cartBtn.onclick = ()=>{ cartPanel.style.display = cartPanel.style.display==="flex"?"none":"flex"; }
+  cartBtn.onclick = ()=>{ 
+    cartPanel.style.display = cartPanel.style.display==="flex"?"none":"flex"; 
+  }
   $("#send-wa-btn").onclick = sendOrder;
+
   updateCart();
 }
 
+// ⚡ تحديث السلة
 function updateCart(){
   const ul = $("#cart-items");
   const count = $("#cart-count");
@@ -124,6 +131,7 @@ function updateCart(){
   }
 }
 
+// ⚡ إرسال الطلب عبر WhatsApp
 function sendOrder(){
   const phoneNumber="963998411476";
   const address=$("#cart-address").value.trim();
@@ -145,6 +153,7 @@ function sendOrder(){
   window.open(link,"_blank");
 }
 
+// ⚡ Toast Notification
 function showToast(msg="تمت الإضافة للسلة ✅") {
   const toast = document.getElementById("toast");
   toast.textContent = msg;
@@ -152,23 +161,27 @@ function showToast(msg="تمت الإضافة للسلة ✅") {
   setTimeout(()=>{ toast.classList.remove("show"); }, 2500);
 }
 
-// 🔹 عرض الصورة الكبيرة
+// ⚡ عرض الصورة الكبيرة (Modal)
 function showImage(src){
-  const modal = document.getElementById("img-modal");
-  const modalImg = modal.querySelector("img");
-  modalImg.src = src;
+  const modal = document.getElementById("imageModal");
+  const modalImg = document.getElementById("modalImg");
+  const closeBtn = modal.querySelector(".close-modal");
+
   modal.style.display = "flex";
-  modal.onclick = ()=> modal.style.display = "none";
+  modalImg.src = src;
+
+  closeBtn.onclick = ()=> modal.style.display = "none";
+  modal.onclick = (e)=>{ if(e.target === modal) modal.style.display="none"; };
 }
 
-// Splash Screen
+// ⚡ Splash Screen
 window.addEventListener('DOMContentLoaded',init);
 window.addEventListener("load",()=>{
   const splash=document.getElementById("splash");
   setTimeout(()=>{splash.classList.add("hidden");},2000);
 });
 
-// PWA
+// ⚡ PWA / Service Worker
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', async () => {
     try {
@@ -188,6 +201,7 @@ if ('serviceWorker' in navigator) {
   });
 }
 
+// ⚡ تثبيت التطبيق (Install PWA)
 let deferredPrompt;
 const installBtn = document.getElementById('btn-install');
 window.addEventListener('beforeinstallprompt', (e) => {
