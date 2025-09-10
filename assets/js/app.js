@@ -1,4 +1,4 @@
-let cart={};
+let cart = {};
 
 async function fetchJSON(path){
   const r = await fetch(path);
@@ -28,24 +28,41 @@ async function init(){
   container.innerHTML = '';
 
   menu.sections.forEach(sec=>{
-    const card=create('div','menu-card');
-    const h=create('h3',null,sec.name);
+    const card = create('div','menu-card');
+    const h = create('h3',null,sec.name);
     card.appendChild(h);
-    const ul=create('ul');
+    const ul = create('ul');
+
     sec.items.forEach(it=>{
-      const li=create('li');
-      const name=create('span',null,it);
-      const addBtn=create('button','btn-add-cart');
+      const li = create('li');
+
+      // عنصر صورة صغير
+      if(it.img){
+        const img = document.createElement("img");
+        img.src = it.img;
+        img.alt = it.name;
+        img.className = "menu-thumb";
+        img.onclick = ()=> showImage(it.img);
+        li.appendChild(img);
+      }
+
+      // اسم المشروب
+      const name = create('span','',it.name);
+      li.appendChild(name);
+
+      // زر الإضافة
+      const addBtn = create('button','btn-add-cart');
       addBtn.innerHTML = `أضف للسلة 🛒`;
       addBtn.onclick = ()=>{
-        cart[it]?cart[it]++:cart[it]=1;
+        cart[it.name] ? cart[it.name]++ : cart[it.name] = 1;
         updateCart();
-        showToast(`${it} تمت إضافته ✅`);
+        showToast(`${it.name} تمت إضافته ✅`);
       };
-      li.appendChild(name);
       li.appendChild(addBtn);
+
       ul.appendChild(li);
     });
+
     card.appendChild(ul);
     container.appendChild(card);
   });
@@ -59,7 +76,6 @@ async function init(){
     const question = create("div","faq-question",q.q);
     const answer = create("div","faq-answer",q.a);
 
-    // إظهار/إخفاء
     question.onclick = ()=>{
       answer.classList.toggle("open");
     };
@@ -70,30 +86,34 @@ async function init(){
   });
 
   // أحداث السلة
-  const cartBtn=$("#cart-button");
-  const cartPanel=$("#cart-panel");
-  cartBtn.onclick=()=>{cartPanel.style.display=cartPanel.style.display==="flex"?"none":"flex";}
-  $("#send-wa-btn").onclick=sendOrder;
+  const cartBtn = $("#cart-button");
+  const cartPanel = $("#cart-panel");
+  cartBtn.onclick = ()=>{ cartPanel.style.display = cartPanel.style.display==="flex"?"none":"flex"; }
+  $("#send-wa-btn").onclick = sendOrder;
   updateCart();
 }
 
 function updateCart(){
-  const ul=$("#cart-items");
-  const count=$("#cart-count");
-  let totalItems=0;
-  for(let item in cart) totalItems+=cart[item];
+  const ul = $("#cart-items");
+  const count = $("#cart-count");
+  let totalItems = 0;
+  for(let item in cart) totalItems += cart[item];
   count.textContent = totalItems;
 
-  ul.innerHTML="";
-  if(totalItems===0){ul.innerHTML="<li>السلة فارغة</li>";return;}
+  ul.innerHTML = "";
+  if(totalItems===0){
+    ul.innerHTML = "<li>السلة فارغة</li>";
+    return;
+  }
+
   for(let item in cart){
-    const li=create('li');
-    const name=create('span',null,`${item} x${cart[item]}`);
-    const controls=create('span');
-    const plus=create('button','btn-small','+');
-    plus.onclick=()=>{cart[item]++;updateCart();}
-    const minus=create('button','btn-small','-');
-    minus.onclick=()=>{
+    const li = create('li');
+    const name = create('span',null,`${item} x${cart[item]}`);
+    const controls = create('span');
+    const plus = create('button','btn-small','+');
+    plus.onclick = ()=>{ cart[item]++; updateCart(); }
+    const minus = create('button','btn-small','-');
+    minus.onclick = ()=>{
       cart[item]--; if(cart[item]<=0) delete cart[item]; updateCart();
     };
     controls.appendChild(minus);
@@ -108,19 +128,15 @@ function sendOrder(){
   const phoneNumber="963998411476";
   const address=$("#cart-address").value.trim();
 
-  // تحقق إذا السلة فارغة
   if(Object.keys(cart).length === 0){
     showToast("السلة فارغة! أضف بعض المنتجات أولاً ❌");
     return;
   }
-
-  // تحقق إذا العنوان فارغ
   if(!address){
     showToast("يجب إدخال العنوان لإرسال الطلب 📍");
     return;
   }
 
-  // إنشاء الرسالة
   let message="طلب جديد:\n";
   for(let item in cart) message+=`${item} x${cart[item]}\n`;
   message += `الموقع: ${address}`;
@@ -129,12 +145,20 @@ function sendOrder(){
   window.open(link,"_blank");
 }
 
-// Toast function
 function showToast(msg="تمت الإضافة للسلة ✅") {
   const toast = document.getElementById("toast");
   toast.textContent = msg;
   toast.classList.add("show");
   setTimeout(()=>{ toast.classList.remove("show"); }, 2500);
+}
+
+// 🔹 عرض الصورة الكبيرة
+function showImage(src){
+  const modal = document.getElementById("img-modal");
+  const modalImg = modal.querySelector("img");
+  modalImg.src = src;
+  modal.style.display = "flex";
+  modal.onclick = ()=> modal.style.display = "none";
 }
 
 // Splash Screen
@@ -143,7 +167,8 @@ window.addEventListener("load",()=>{
   const splash=document.getElementById("splash");
   setTimeout(()=>{splash.classList.add("hidden");},2000);
 });
-// --- PWA: register service worker ---
+
+// PWA
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', async () => {
     try {
@@ -163,7 +188,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// --- PWA: beforeinstallprompt (Add to Home Screen) ---
 let deferredPrompt;
 const installBtn = document.getElementById('btn-install');
 window.addEventListener('beforeinstallprompt', (e) => {
