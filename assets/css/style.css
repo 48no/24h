@@ -193,3 +193,40 @@ body{
   font-size: 18px;
   font-weight: bold;
 }
+/* صور المنيو */
+.menu-thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+  margin-left: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.menu-thumb:hover {
+  transform: scale(1.2);
+}
+
+/* النافذة المنبثقة لعرض الصورة */
+#img-modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+}
+#img-modal img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 12px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.8);
+  animation: zoomIn 0.3s ease;
+}
+
+@keyframes zoomIn {
+  from { transform: scale(0.6); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
