@@ -3,131 +3,131 @@
     {
       "name": "موهيتو",
       "items": [
-        "بلو بيري",
-        "بلو كوراساو",
-        "بلو هاواي",
-        "بلاك انرجي",
-        "غرين انرجي",
-        "باشن فروت",
-        "ليتشي",
-        "دراق",
-        "كرز",
-        "فريز",
-        "توت",
-        "علكة",
-        "منغا",
-        "رمان",
-        "بطيخ",
-        "كيوي",
-        "اناناس",
-        "تفاح اخضر",
-        "شاي بارد"
+        { "name": "بلو بيري", "image": "assets/img/hero.jpg" },
+        { "name": "بلو كوراساو", "image": "assets/img/hero.jpg" },
+        { "name": "بلو هاواي", "image": "assets/img/hero.jpg" },
+        { "name": "بلاك انرجي", "image": "assets/img/hero.jpg" },
+        { "name": "غرين انرجي", "image": "assets/img/hero.jpg" },
+        { "name": "باشن فروت", "image": "assets/img/hero.jpg" },
+        { "name": "ليتشي", "image": "assets/img/hero.jpg" },
+        { "name": "دراق", "image": "assets/img/hero.jpg" },
+        { "name": "كرز", "image": "assets/img/hero.jpg" },
+        { "name": "فريز", "image": "assets/img/hero.jpg" },
+        { "name": "توت", "image": "assets/img/hero.jpg" },
+        { "name": "علكة", "image": "assets/img/hero.jpg" },
+        { "name": "منغا", "image": "assets/img/hero.jpg" },
+        { "name": "رمان", "image": "assets/img/hero.jpg" },
+        { "name": "بطيخ", "image": "assets/img/hero.jpg" },
+        { "name": "كيوي", "image": "assets/img/hero.jpg" },
+        { "name": "اناناس", "image": "assets/img/hero.jpg" },
+        { "name": "تفاح اخضر", "image": "assets/img/hero.jpg" },
+        { "name": "شاي بارد", "image": "assets/img/hero.jpg" }
       ]
     },
     {
       "name": "مشروبات طاقة",
       "items": [
-        "ريد بول",
-        "جاك",
-        "كود رد",
-        "بايسون",
-        "بوم بوم"
+        { "name": "ريد بول", "image": "assets/img/hero.jpg" },
+        { "name": "جاك", "image": "assets/img/hero.jpg" },
+        { "name": "كود رد", "image": "assets/img/hero.jpg" },
+        { "name": "بايسون", "image": "assets/img/hero.jpg" },
+        { "name": "بوم بوم", "image": "assets/img/hero.jpg" }
       ]
     },
     {
       "name": "موكا",
       "items": [
-        "موكا شوكولا وايت",
-        "موكا شوكولا بلاك"
+        { "name": "موكا شوكولا وايت", "image": "assets/img/hero.jpg" },
+        { "name": "موكا شوكولا بلاك", "image": "assets/img/hero.jpg" }
       ]
     },
     {
       "name": "فرابتشينو",
       "items": [
-        "فرابتشينو فانيلا",
-        "فرابتشينو موكا",
-        "فرابتشينو نسكافيه",
-        "فرابتشينو كراميل"
+        { "name": "فرابتشينو فانيلا", "image": "assets/img/hero.jpg" },
+        { "name": "فرابتشينو موكا", "image": "assets/img/hero.jpg" },
+        { "name": "فرابتشينو نسكافيه", "image": "assets/img/hero.jpg" },
+        { "name": "فرابتشينو كراميل", "image": "assets/img/hero.jpg" }
       ]
     },
     {
       "name": "قهوة بلاك",
       "items": [
-        "أمريكانو",
-        "v60"
+        { "name": "أمريكانو", "image": "assets/img/hero.jpg" },
+        { "name": "v60", "image": "assets/img/hero.jpg" }
       ]
     },
     {
       "name": "عصائر",
       "items": [
-        "موز وحليب وعسل",
-        "فريز فريش",
-        "بولو",
-        "برتقال",
-        "دراق",
-        "بطيخ أحمر",
-        "شمام",
-        "إمبراطورو انفا",
-        "جمايكا"
+        { "name": "موز وحليب وعسل", "image": "assets/img/hero.jpg" },
+        { "name": "فريز فريش", "image": "assets/img/hero.jpg" },
+        { "name": "بولو", "image": "assets/img/hero.jpg" },
+        { "name": "برتقال", "image": "assets/img/hero.jpg" },
+        { "name": "دراق", "image": "assets/img/hero.jpg" },
+        { "name": "بطيخ أحمر", "image": "assets/img/hero.jpg" },
+        { "name": "شمام", "image": "assets/img/hero.jpg" },
+        { "name": "إمبراطورو انفا", "image": "assets/img/hero.jpg" },
+        { "name": "جمايكا", "image": "assets/img/hero.jpg" }
       ]
     },
     {
       "name": "لانيه ساخن",
       "items": [
-        "لاتيه كرميل",
-        "لاتيه كافي لين",
-        "لاتيه فانيلا",
-        "لاتيه بندق",
-        "لاتيه فستق حلبي",
-        "سبانش لاتيه",
-        "ماكياتو كراميل"
+        { "name": "لاتيه كرميل", "image": "assets/img/hero.jpg" },
+        { "name": "لاتيه كافي لين", "image": "assets/img/hero.jpg" },
+        { "name": "لاتيه فانيلا", "image": "assets/img/hero.jpg" },
+        { "name": "لاتيه بندق", "image": "assets/img/hero.jpg" },
+        { "name": "لاتيه فستق حلبي", "image": "assets/img/hero.jpg" },
+        { "name": "سبانش لاتيه", "image": "assets/img/hero.jpg" },
+        { "name": "ماكياتو كراميل", "image": "assets/img/hero.jpg" }
       ]
     },
     {
       "name": "ايس لاتيه",
       "items": [
-        "لاتيه بالنسله",
-        "لاتيه موكا",
-        "لاتيه كرميل",
-        "لاتيه كافي لين",
-        "لاتيه نسكافيه",
-        "لاتيه بالبندق",
-        "لاتيه شيك كراميل",
-        "لاتيه فانيلا",
-        "لاتيه فستق حلبي",
-        "سبانش لاتيه ك"
+        { "name": "لاتيه بالنسله", "image": "assets/img/hero.jpg" },
+        { "name": "لاتيه موكا", "image": "assets/img/hero.jpg" },
+        { "name": "لاتيه كرميل", "image": "assets/img/hero.jpg" },
+        { "name": "لاتيه كافي لين", "image": "assets/img/hero.jpg" },
+        { "name": "لاتيه نسكافيه", "image": "assets/img/hero.jpg" },
+        { "name": "لاتيه بالبندق", "image": "assets/img/hero.jpg" },
+        { "name": "لاتيه شيك كراميل", "image": "assets/img/hero.jpg" },
+        { "name": "لاتيه فانيلا", "image": "assets/img/hero.jpg" },
+        { "name": "لاتيه فستق حلبي", "image": "assets/img/hero.jpg" },
+        { "name": "سبانش لاتيه ك", "image": "assets/img/hero.jpg" }
       ]
     },
     {
       "name": "ميلك شيك",
       "items": [
-        "ميلك شيك لوتس",
-        "ميلك شيك اوريو",
-        "ميلك شيك نوتيلا",
-        "ميلك شيك كندر",
-        "ميلك شيك سنيكرز",
-        "ميلك شيك سيريلاك",
-        "ميلك شيك كافي لين",
-        "ميلك شيك بالفستق",
-        "ميلك شيك شوكولا",
-        "ميلك شيك فريز",
-        "ميلك شيك فريز وحليب وشوكولا"
+        { "name": "ميلك شيك لوتس", "image": "assets/img/hero.jpg" },
+        { "name": "ميلك شيك اوريو", "image": "assets/img/hero.jpg" },
+        { "name": "ميلك شيك نوتيلا", "image": "assets/img/hero.jpg" },
+        { "name": "ميلك شيك كندر", "image": "assets/img/hero.jpg" },
+        { "name": "ميلك شيك سنيكرز", "image": "assets/img/hero.jpg" },
+        { "name": "ميلك شيك سيريلاك", "image": "assets/img/hero.jpg" },
+        { "name": "ميلك شيك كافي لين", "image": "assets/img/hero.jpg" },
+        { "name": "ميلك شيك بالفستق", "image": "assets/img/hero.jpg" },
+        { "name": "ميلك شيك شوكولا", "image": "assets/img/hero.jpg" },
+        { "name": "ميلك شيك فريز", "image": "assets/img/hero.jpg" },
+        { "name": "ميلك شيك فريز وحليب وشوكولا", "image": "assets/img/hero.jpg" }
       ]
     },
     {
       "name": "قهوة بلاك (ساخنة)",
       "items": [
-        "إسبريسو لونغو",
-        "إسبريسو سنقل",
-        "إسبريسو دبل",
-        "نسكافيه بالحليب",
-        "نسكافيه شوكولا",
-        "نسكافيه كابتشينو",
-        "فلات وايت",
-        "كابتشينو",
-        "أمريكانو",
-        "قهوة تركية",
-        "قهوة فرنسية"
+        { "name": "إسبريسو لونغو", "image": "assets/img/hero.jpg" },
+        { "name": "إسبريسو سنقل", "image": "assets/img/hero.jpg" },
+        { "name": "إسبريسو دبل", "image": "assets/img/hero.jpg" },
+        { "name": "نسكافيه بالحليب", "image": "assets/img/hero.jpg" },
+        { "name": "نسكافيه شوكولا", "image": "assets/img/hero.jpg" },
+        { "name": "نسكافيه كابتشينو", "image": "assets/img/hero.jpg" },
+        { "name": "فلات وايت", "image": "assets/img/hero.jpg" },
+        { "name": "كابتشينو", "image": "assets/img/hero.jpg" },
+        { "name": "أمريكانو", "image": "assets/img/hero.jpg" },
+        { "name": "قهوة تركية", "image": "assets/img/hero.jpg" },
+        { "name": "قهوة فرنسية", "image": "assets/img/hero.jpg" }
       ]
     }
   ]
