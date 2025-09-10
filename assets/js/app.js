@@ -40,12 +40,12 @@ async function init(){
       const li = create('li');
 
       // صورة صغيرة
-      if(it.img){
+      if(it.image){
         const img = document.createElement("img");
-        img.src = it.img;
+        img.src = it.image;
         img.alt = it.name;
         img.className = "menu-thumb";
-        img.onclick = ()=> showImage(it.img);
+        img.onclick = ()=> showImage(it.image);
         li.appendChild(img);
       }
 
@@ -81,6 +81,7 @@ async function init(){
 
     question.onclick = ()=>{
       answer.classList.toggle("open");
+      item.classList.toggle("active");
     };
 
     item.appendChild(question);
@@ -163,15 +164,11 @@ function showToast(msg="تمت الإضافة للسلة ✅") {
 
 // ⚡ عرض الصورة الكبيرة (Modal)
 function showImage(src){
-  const modal = document.getElementById("imageModal");
-  const modalImg = document.getElementById("modalImg");
-  const closeBtn = modal.querySelector(".close-modal");
-
-  modal.style.display = "flex";
+  const modal = document.getElementById("img-modal");
+  const modalImg = modal.querySelector("img");
   modalImg.src = src;
-
-  closeBtn.onclick = ()=> modal.style.display = "none";
-  modal.onclick = (e)=>{ if(e.target === modal) modal.style.display="none"; };
+  modal.style.display = "flex";
+  modal.onclick = ()=> modal.style.display = "none";
 }
 
 // ⚡ Splash Screen
